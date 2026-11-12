@@ -39,7 +39,7 @@ export default function Home() {
   const [input, setInput] = useState("");
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [isStreaming, setIsStreaming] = useState(false);
-  const [theme, setTheme] = useState<"light" | "dark">("dark");
+  const [theme, setTheme] = useState<"light" | "dark">("light");
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -47,14 +47,15 @@ export default function Home() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  // Initialize theme from system or preference
+  // Initialize theme from system or preference (defaults to light)
   useEffect(() => {
     const savedTheme = localStorage.getItem("el-nino-theme") as "light" | "dark" | null;
     if (savedTheme) {
       setTheme(savedTheme);
       document.documentElement.classList.toggle("dark", savedTheme === "dark");
     } else {
-      document.documentElement.classList.add("dark");
+      setTheme("light");
+      document.documentElement.classList.remove("dark");
     }
   }, []);
 

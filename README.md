@@ -7,14 +7,50 @@
 
 ---
 
-## 📌 Executive Summary & Hackathon Problem Statement
+## 📌 Executive Summary & Hackathon Problem Alignment
 
-Across Sub-Saharan Africa, smallholder farmers produce over **80% of domestic food supply**, yet face crop yield losses between **30% and 50% annually** due to a devastating confluence of:
-1. **Accelerated Climate Volatility & The El Niño Phenomenon**: Erratic rainfall patterns, prolonged dry spells followed by sudden heavy deluges, creating ideal breeding conditions for fungal and bacterial pathogens.
-2. **Pathology Identification Barriers**: Traditional agricultural extension officer-to-farmer ratios in Nigeria often exceed **1 : 3,000–5,000**. Smallholders cannot access timely pathology diagnostics when early blight, armyworms, or mosaic viruses strike.
-3. **Information Asymmetry & Pricing Volatility**: Farmers frequently get exploited on input costs (fertilizers, pesticides) and lack real-time market price visibility across key regional trading hubs like Mile 12 (Lagos), Bodija (Ibadan), and Dawanau (Kano).
+In agricultural hackathons across Africa (e.g. Buildathon Group 8), four interconnected systemic challenges have been identified as primary drivers of rural food insecurity and smallholder poverty:
 
-**El-Nino** bridges this divide by turning any smartphone or web browser into an **agronomy extension specialist**. Farmers can snap a photo of an infected leaf to receive an immediate pathology breakdown, severity rating, organic remedies, and precise local chemical dosages with accurate costs in **Nigerian Naira (₦)**.
+```
+  ┌──────────────────────────────────────────────────────────────────────────────────┐
+  │                   BUILDATHON PROBLEM STATEMENTS & EL-NINO MATRIX                 │
+  ├─────────────────────────────────────────┬─────────┬──────────────────────────────┤
+  │ Problem Statement                       │ Status  │ How El-Nino Solves It        │
+  ├─────────────────────────────────────────┼─────────┼──────────────────────────────┤
+  │ 1. Poor access to market information    │ SOLVED  │ Grounded Naira (₦) Market DB │
+  │ 2. Crop pests and diseases              │ SOLVED  │ Gemini 3.1 Flash Vision Scan │
+  │ 3. Unpredictable weather conditions     │ ADAPTED │ Climate & Irrigation Guidance│
+  │ 4. Limited access to extension services │ SOLVED  │ 24/7 AI Agronomy Specialist  │
+  └─────────────────────────────────────────┴─────────┴──────────────────────────────┘
+```
+
+### Detailed Problem-to-Solution Mapping:
+
+#### 1. Poor Access to Market Information (SOLVED)
+> *"Many farmers struggle to access reliable and timely information about market prices. This makes it difficult for them to know where and when to sell their produce at good prices."*
+- **El-Nino Solution**: 
+  - Integrated with real-time tracked regional commodity prices across Nigeria's major commercial trading hubs: **Mile 12 (Lagos)**, **Bodija (Ibadan)**, **Dawanau (Kano)**, and **Ose Market (Onitsha)**.
+  - Farmers can instantly query commodity rates per kilogram (₦/kg) and per standard 50kg/100kg bag (₦/bag), understand price trends (rising, stable, falling), and identify the most profitable market to sell their Cassava, Maize, Yam, Tomatoes, or Cowpeas without exploitation from middlemen.
+
+#### 2. Crop Pests and Diseases (SOLVED)
+> *"Farmers often struggle to identify crop pests and diseases early enough to prevent serious damage. Limited access to timely information and expert guidance can lead to reduced crop yields and financial losses."*
+- **El-Nino Solution**:
+  - **Instant Visual Pathology Scanner**: Farmers snap or upload leaf photos directly in the browser or mobile web view. 
+  - **Gemini 3.1 Flash Multimodal AI**: Inspects lesion patterns, discoloration halos, sporulation, and necrosis against the PlantVillage pathology framework.
+  - Generates immediate severity assessments (*Low, Medium, High, Very High*) alongside dual-action remediation plans: organic/cultural controls (pruning, rogueing, spacing) and local chemical fungicide/insecticide recipes with exact dilution rates (per 15L knapsack sprayer) and estimated costs in Naira (₦).
+
+#### 3. Unpredictable Weather Conditions (ADAPTED & RESILIENT)
+> *"Irregular rainfall, prolonged dry periods and excessive rainfall make farming difficult. Without timely information about changing weather and soil conditions, farmers may struggle to make informed decisions about irrigation, drainage and crop management."*
+- **El-Nino Solution**:
+  - Encodes crop-specific soil water requirements (drought-tolerant vs. moisture-sensitive) and regional planting calendar windows across Nigerian agro-ecological zones (Derived Savannah, Rainforest, Guinea Savannah, Sudan Savannah).
+  - Provides farmers with actionable field mitigation protocols for erratic weather: managing dry spells (organic mulching, ridge preparation, deficit irrigation) and sudden deluges (furrow drainage, preventing post-rain fungal spore spread).
+
+#### 4. Limited Access to Agricultural Knowledge and Extension Services (SOLVED)
+> *"Many farmers have limited access to agricultural experts and reliable farming information. This makes it difficult for them to get proper guidance on soil management, crop care and other farming practices."*
+- **El-Nino Solution**:
+  - Democratizes agronomy expertise by placing a 24/7 agricultural extension specialist in the pocket of every farmer, bridging Nigeria's severe extension deficit (> 1 : 3,000 officer-to-farmer ratio).
+  - Delivers tailored guidance on 20 staple crops, NPK 15-15-15 and Urea split-application schedules, soil amendments, and spacing recommendations.
+  - Communicates natively in the farmer's preferred dialect and language tone (English, Nigerian Pidgin, Yoruba, Hausa, Igbo).
 
 ---
 

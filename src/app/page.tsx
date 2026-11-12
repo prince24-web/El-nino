@@ -356,6 +356,15 @@ export default function Home() {
             >
               🐛 Fall Armyworm treatment
             </button>
+            <button
+              onClick={() => {
+                handleSubmit("With irregular rainfall and dry spells this season, what irrigation, drainage, and soil practices should I adopt?");
+                setSidebarOpen(false);
+              }}
+              className="rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-2.5 text-left text-xs font-medium transition-colors hover:border-[var(--accent-soft-border)] hover:bg-[var(--bg-hover)]"
+            >
+              🌦️ Unpredictable weather & dry spell advice
+            </button>
           </div>
         </div>
 

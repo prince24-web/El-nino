@@ -19,7 +19,7 @@ In agricultural hackathons across Africa (e.g. Buildathon Group 8), four interco
   ├─────────────────────────────────────────┼─────────┼──────────────────────────────┤
   │ 1. Poor access to market information    │ SOLVED  │ Grounded Naira (₦) Market DB │
   │ 2. Crop pests and diseases              │ SOLVED  │ Gemini 3.1 Flash Vision Scan │
-  │ 3. Unpredictable weather conditions     │ ADAPTED │ Climate & Irrigation Guidance│
+  │ 3. Unpredictable weather & wildfires    │ SOLVED  │ IoT 3D Twin (Flood/Fire/Dry) │
   │ 4. Limited access to extension services │ SOLVED  │ 24/7 AI Agronomy Specialist  │
   └─────────────────────────────────────────┴─────────┴──────────────────────────────┘
 ```
@@ -39,11 +39,16 @@ In agricultural hackathons across Africa (e.g. Buildathon Group 8), four interco
   - **Gemini 3.1 Flash Multimodal AI**: Inspects lesion patterns, discoloration halos, sporulation, and necrosis against the PlantVillage pathology framework.
   - Generates immediate severity assessments (*Low, Medium, High, Very High*) alongside dual-action remediation plans: organic/cultural controls (pruning, rogueing, spacing) and local chemical fungicide/insecticide recipes with exact dilution rates (per 15L knapsack sprayer) and estimated costs in Naira (₦).
 
-#### 3. Unpredictable Weather Conditions (ADAPTED & RESILIENT)
-> *"Irregular rainfall, prolonged dry periods and excessive rainfall make farming difficult. Without timely information about changing weather and soil conditions, farmers may struggle to make informed decisions about irrigation, drainage and crop management."*
+#### 3. Unpredictable Weather & Environmental Hazards (SOLVED VIA IoT + 3D TWIN)
+> *"Irregular rainfall, prolonged dry periods, excessive rainfall, and sudden wildfires make farming difficult. Without timely information about changing weather, soil moisture, and hazards, farmers suffer catastrophic crop loss."*
 - **El-Nino Solution**:
-  - Encodes crop-specific soil water requirements (drought-tolerant vs. moisture-sensitive) and regional planting calendar windows across Nigerian agro-ecological zones (Derived Savannah, Rainforest, Guinea Savannah, Sudan Savannah).
-  - Provides farmers with actionable field mitigation protocols for erratic weather: managing dry spells (organic mulching, ridge preparation, deficit irrigation) and sudden deluges (furrow drainage, preventing post-rain fungal spore spread).
+  - **Cyber-Physical Farmland IoT Node**: Connected via an **ESP32** reading Soil Moisture (analog), Rainfall (conductive plate), and Wildfire/Flame emissions (via broadband IR photodiode).
+  - **Interactive 3D WebGL Digital Twin (Three.js)**:
+    - **Active Rain Simulation**: Particle storm engine renders animated raindrops and overcast clouds when rain is detected.
+    - **Flood Waterlogging Plane**: Blue reflective floodwater plane rises above the soil when soil saturation exceeds 75%, visually alerting farmers to root suffocation danger.
+    - **Dynamic Soil Desiccation**: Soil surface dynamically shifts color from parched cracked tan (drought) to rich loam (optimal) and saturated mud (flood).
+    - **Wildfire Alarm System**: Rising animated flame/smoke particle plumes and flashing emergency red lights trigger when an open flame or bushfire is detected.
+  - **One-Click Emergency AI Action**: Automated disaster triage buttons connect directly to Gemini 3.1 Flash for instant furrow drainage, trenching, drought mulching, or firebreak guidance.
 
 #### 4. Limited Access to Agricultural Knowledge and Extension Services (SOLVED)
 > *"Many farmers have limited access to agricultural experts and reliable farming information. This makes it difficult for them to get proper guidance on soil management, crop care and other farming practices."*

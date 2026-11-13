@@ -21,7 +21,9 @@ import {
   Check,
   Menu,
   Leaf,
+  Radio,
 } from "lucide-react";
+import FarmSimulation3D from "@/components/FarmSimulation3D";
 
 interface Message {
   id: string;
@@ -42,6 +44,7 @@ export default function Home() {
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [showSimulation, setShowSimulation] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -279,14 +282,30 @@ export default function Home() {
           </button>
         </div>
 
-        {/* New Chat Button */}
-        <div className="p-4">
+        {/* New Chat & 3D Simulation Buttons */}
+        <div className="p-4 flex flex-col gap-2">
           <button
             onClick={startNewChat}
             className="flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--border-medium)] bg-[var(--bg-surface)] px-4 py-2.5 font-medium text-sm transition-all hover:bg-[var(--bg-hover)] shadow-xs"
           >
             <Plus className="h-4 w-4" />
             New conversation
+          </button>
+
+          <button
+            onClick={() => {
+              setShowSimulation(true);
+              setSidebarOpen(false);
+            }}
+            className="flex w-full items-center justify-between gap-2 rounded-xl border border-emerald-500/40 bg-emerald-500/10 px-3.5 py-2.5 font-semibold text-xs text-emerald-700 dark:text-emerald-400 hover:bg-emerald-500/20 transition-all shadow-xs"
+          >
+            <span className="flex items-center gap-2">
+              <Radio className="h-4 w-4 text-emerald-600 animate-pulse" />
+              3D Farm & IoT Hub
+            </span>
+            <span className="text-[9px] uppercase px-1.5 py-0.5 rounded-full bg-emerald-600 text-white font-bold">
+              Live
+            </span>
           </button>
         </div>
 
@@ -422,7 +441,7 @@ export default function Home() {
               </p>
 
               {/* Action Cards */}
-              <div className="mt-8 grid w-full max-w-2xl grid-cols-1 gap-3 sm:grid-cols-3">
+              <div className="mt-8 grid w-full max-w-3xl grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-4">
                 <div
                   onClick={() => fileInputRef.current?.click()}
                   className="cursor-pointer group flex flex-col items-center text-center rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-4 shadow-xs transition-all hover:border-[var(--accent)] hover:shadow-md"
@@ -431,6 +450,17 @@ export default function Home() {
                   <span className="font-semibold text-xs">Scan Plant Leaf</span>
                   <span className="mt-1 text-[11px] text-[var(--text-tertiary)]">
                     Upload photo for instant disease diagnosis
+                  </span>
+                </div>
+
+                <div
+                  onClick={() => setShowSimulation(true)}
+                  className="cursor-pointer group flex flex-col items-center text-center rounded-2xl border border-emerald-500/40 bg-emerald-500/5 p-4 shadow-xs transition-all hover:border-emerald-500 hover:shadow-md"
+                >
+                  <Radio className="h-6 w-6 text-emerald-600 mb-2 group-hover:scale-110 transition-transform animate-pulse" />
+                  <span className="font-semibold text-xs text-emerald-700 dark:text-emerald-400">3D Farmland & IoT</span>
+                  <span className="mt-1 text-[11px] text-[var(--text-tertiary)]">
+                    Real-time soil, rain & wildfire alarm
                   </span>
                 </div>
 
@@ -621,6 +651,21 @@ export default function Home() {
           </div>
         </div>
       </main>
+
+      {/* 3D Farmland Digital Twin Modal */}
+      {showSimulation && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 md:p-6 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="relative w-full max-w-5xl h-[88vh] bg-[var(--bg-app)] rounded-3xl overflow-hidden shadow-2xl flex flex-col border border-[var(--border-subtle)]">
+            <FarmSimulation3D
+              onClose={() => setShowSimulation(false)}
+              onAskAI={(prompt) => {
+                setShowSimulation(false);
+                handleSubmit(prompt);
+              }}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

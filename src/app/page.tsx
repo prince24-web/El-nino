@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import FarmSimulation3D from "@/components/FarmSimulation3D";
 import {
   Sprout,
   Plus,
@@ -21,6 +22,7 @@ import {
   Check,
   Menu,
   Leaf,
+  Activity,
 } from "lucide-react";
 
 interface Message {
@@ -42,6 +44,7 @@ export default function Home() {
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [showSimulation, setShowSimulation] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -279,14 +282,25 @@ export default function Home() {
           </button>
         </div>
 
-        {/* New Chat Button */}
-        <div className="p-4">
+        {/* Actions */}
+        <div className="p-4 flex flex-col gap-2">
           <button
             onClick={startNewChat}
             className="flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--border-medium)] bg-[var(--bg-surface)] px-4 py-2.5 font-medium text-sm transition-all hover:bg-[var(--bg-hover)] shadow-xs"
           >
             <Plus className="h-4 w-4" />
             New conversation
+          </button>
+
+          <button
+            onClick={() => {
+              setShowSimulation(true);
+              setSidebarOpen(false);
+            }}
+            className="flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--accent)] text-white px-4 py-2.5 font-medium text-sm transition-all hover:bg-[var(--accent-strong)] shadow-xs"
+          >
+            <Activity className="h-4 w-4" />
+            3D Farm Twin (Live IoT)
           </button>
         </div>
 
@@ -630,6 +644,17 @@ export default function Home() {
           </div>
         </div>
       </main>
+
+      {/* 3D Farmland Digital Twin Simulation Modal */}
+      {showSimulation && (
+        <FarmSimulation3D
+          onAskAI={(prompt) => {
+            setShowSimulation(false);
+            handleSubmit(prompt);
+          }}
+          onClose={() => setShowSimulation(false)}
+        />
+      )}
     </div>
   );
 }

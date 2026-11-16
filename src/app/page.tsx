@@ -264,12 +264,10 @@ export default function Home() {
         {/* Brand */}
         <div className="flex items-center justify-between px-5 py-5 border-b border-[var(--border-subtle)]">
           <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--accent)] text-white shadow-sm">
-              <Leaf className="h-5 w-5" />
-            </div>
+            <img src="/logo-mark.svg" alt="El Niño emblem" className="h-9 w-9 object-contain" />
             <div>
-              <span className="font-bold text-lg tracking-tight block">El-Nino</span>
-              <span className="text-[11px] text-[var(--text-tertiary)] uppercase tracking-wider font-semibold">
+              <span className="font-serif font-bold text-xl tracking-tight block">El Niño</span>
+              <span className="text-[10px] text-[var(--text-tertiary)] uppercase tracking-wider font-semibold">
                 Agro AI & Pathology
               </span>
             </div>
@@ -419,7 +417,8 @@ export default function Home() {
             >
               <Menu className="h-5 w-5" />
             </button>
-            <span className="font-bold text-base">El-Nino</span>
+            <img src="/logo-mark.svg" alt="El Niño" className="h-6 w-6 object-contain" />
+            <span className="font-serif font-bold text-base">El Niño</span>
           </div>
           <button
             onClick={startNewChat}

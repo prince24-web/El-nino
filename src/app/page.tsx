@@ -420,13 +420,22 @@ export default function Home() {
             <img src="/logo-mark.svg" alt="El Niño" className="h-6 w-6 object-contain" />
             <span className="font-serif font-bold text-base">El Niño</span>
           </div>
-          <button
-            onClick={startNewChat}
-            className="flex items-center gap-1 rounded-lg border border-[var(--border-subtle)] px-2.5 py-1 text-xs font-medium"
-          >
-            <Plus className="h-3.5 w-3.5" />
-            New
-          </button>
+          <div className="flex items-center gap-1.5">
+            <button
+              onClick={() => setShowSimulation(true)}
+              className="flex items-center gap-1 rounded-lg bg-[var(--accent)] text-white px-2.5 py-1 text-xs font-medium shadow-2xs"
+            >
+              <Activity className="h-3.5 w-3.5" />
+              3D Twin
+            </button>
+            <button
+              onClick={startNewChat}
+              className="flex items-center gap-1 rounded-lg border border-[var(--border-subtle)] px-2.5 py-1 text-xs font-medium"
+            >
+              <Plus className="h-3.5 w-3.5" />
+              New
+            </button>
+          </div>
         </header>
 
         {/* Messages Scroll Area */}
@@ -440,11 +449,22 @@ export default function Home() {
                 Ask about your farm
               </h1>
               <p className="mt-2 max-w-lg text-sm text-[var(--text-secondary)] leading-relaxed">
-                Snap or upload a diseased crop leaf for instant AI pathology diagnosis, or ask about fertilizer timing, pest management, and Nigerian market prices.
+                Snap or upload a diseased crop leaf for instant AI pathology diagnosis, monitor your live 3D IoT farm twin, or ask about fertilizer timing and Nigerian market prices.
               </p>
 
               {/* Action Cards */}
-              <div className="mt-8 grid w-full max-w-2xl grid-cols-1 gap-3 sm:grid-cols-3">
+              <div className="mt-8 grid w-full max-w-3xl grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                <div
+                  onClick={() => setShowSimulation(true)}
+                  className="cursor-pointer group flex flex-col items-center text-center rounded-2xl border border-[var(--accent-soft-border)] bg-[var(--accent-soft)]/50 p-4 shadow-xs transition-all hover:border-[var(--accent)] hover:shadow-md"
+                >
+                  <Activity className="h-6 w-6 text-[var(--accent)] mb-2 group-hover:scale-110 transition-transform" />
+                  <span className="font-semibold text-xs text-[var(--accent-strong)]">3D Farm Digital Twin</span>
+                  <span className="mt-1 text-[11px] text-[var(--text-secondary)]">
+                    Live ESP32 soil, rain & wildfire sensor stream
+                  </span>
+                </div>
+
                 <div
                   onClick={() => fileInputRef.current?.click()}
                   className="cursor-pointer group flex flex-col items-center text-center rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-4 shadow-xs transition-all hover:border-[var(--accent)] hover:shadow-md"

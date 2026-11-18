@@ -1,24 +1,30 @@
 import { NextRequest, NextResponse } from "next/server";
 
 export interface TelemetryState {
-  soilMoisture: number | null; // 0 - 100%, null when awaiting first hardware reading
+  soilMoisture: number | null;
+  rainIntensity: number;
+  waterLevel: number;
   isRaining: boolean;
   isFire: boolean;
   rawSoil: number | null;
   rawRain: number | null;
+  rawWater: number | null;
+  firePin?: number | null;
   lastUpdated: string | null;
   device: string | null;
   packetsReceived: number;
   source: "awaiting" | "esp32" | "simulation";
 }
 
-// In-memory telemetry state awaiting real ESP32 hardware feed
 let latestTelemetry: TelemetryState = {
   soilMoisture: null,
+  rainIntensity: 0,
+  waterLevel: 0,
   isRaining: false,
   isFire: false,
   rawSoil: null,
   rawRain: null,
+  rawWater: null,
   lastUpdated: null,
   device: null,
   packetsReceived: 0,
@@ -26,7 +32,6 @@ let latestTelemetry: TelemetryState = {
 };
 
 export async function GET() {
-  // Check if hardware signal is still fresh (received within last 15 seconds)
   const now = Date.now();
   const lastTime = latestTelemetry.lastUpdated
     ? new Date(latestTelemetry.lastUpdated).getTime()
@@ -52,14 +57,16 @@ export async function POST(req: NextRequest) {
   try {
     const data = await req.json();
 
-    // Support reset back to "awaiting hardware" mode
     if (data.reset === true) {
       latestTelemetry = {
         soilMoisture: null,
+        rainIntensity: 0,
+        waterLevel: 0,
         isRaining: false,
         isFire: false,
         rawSoil: null,
         rawRain: null,
+        rawWater: null,
         lastUpdated: null,
         device: null,
         packetsReceived: 0,
@@ -75,6 +82,16 @@ export async function POST(req: NextRequest) {
 
     latestTelemetry = {
       soilMoisture: currentMoisture,
+      rainIntensity:
+        typeof data.rainIntensity === "number"
+          ? Math.min(100, Math.max(0, Math.round(data.rainIntensity)))
+          : data.isRaining
+          ? 70
+          : 0,
+      waterLevel:
+        typeof data.waterLevel === "number"
+          ? Math.min(100, Math.max(0, Math.round(data.waterLevel)))
+          : latestTelemetry.waterLevel,
       isRaining:
         typeof data.isRaining === "boolean"
           ? data.isRaining
@@ -85,6 +102,8 @@ export async function POST(req: NextRequest) {
           : latestTelemetry.isFire,
       rawSoil: data.rawSoil ?? latestTelemetry.rawSoil,
       rawRain: data.rawRain ?? latestTelemetry.rawRain,
+      rawWater: data.rawWater ?? latestTelemetry.rawWater,
+      firePin: data.firePin ?? latestTelemetry.firePin,
       lastUpdated: new Date().toISOString(),
       device: data.device || "ESP32-AgroNode-01",
       packetsReceived: latestTelemetry.packetsReceived + 1,

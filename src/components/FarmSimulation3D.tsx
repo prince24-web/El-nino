@@ -27,6 +27,7 @@ export default function FarmSimulation3D({ onAskAI, onClose }: FarmSimulationPro
 
   // Live sensor telemetry state (null moisture = awaiting first hardware reading)
   const [soilMoisture, setSoilMoisture] = useState<number | null>(null);
+  const [rainIntensity, setRainIntensity] = useState<number>(0);
   const [isRaining, setIsRaining] = useState(false);
   const [isFire, setIsFire] = useState(false);
   const [rawSoil, setRawSoil] = useState<number | null>(null);
@@ -65,6 +66,7 @@ export default function FarmSimulation3D({ onAskAI, onClose }: FarmSimulationPro
         if (res.ok) {
           const data = await res.json();
           setSoilMoisture(data.soilMoisture);
+          setRainIntensity(data.rainIntensity || 0);
           setIsRaining(Boolean(data.isRaining));
           setIsFire(Boolean(data.isFire));
           setRawSoil(data.rawSoil);
@@ -85,7 +87,7 @@ export default function FarmSimulation3D({ onAskAI, onClose }: FarmSimulationPro
     };
 
     fetchTelemetry();
-    const interval = setInterval(fetchTelemetry, 1200);
+    const interval = setInterval(fetchTelemetry, 700);
     return () => clearInterval(interval);
   }, []);
 
@@ -312,23 +314,23 @@ export default function FarmSimulation3D({ onAskAI, onClose }: FarmSimulationPro
     leafMaterialsRef.current = leafMats;
     farmRoot.add(cropGroup);
 
-    // 7. Rain Particle System
-    const rainCount = 1400;
+    // 7. Rain Particle System (High-Visibility Raindrops)
+    const rainCount = 2400;
     const rainPositions = new Float32Array(rainCount * 3);
     for (let i = 0; i < rainCount * 3; i += 3) {
-      rainPositions[i] = (Math.random() - 0.5) * 10;
-      rainPositions[i + 1] = Math.random() * 9;
-      rainPositions[i + 2] = (Math.random() - 0.5) * 10;
+      rainPositions[i] = (Math.random() - 0.5) * 9.5;
+      rainPositions[i + 1] = Math.random() * 8.5;
+      rainPositions[i + 2] = (Math.random() - 0.5) * 9.5;
     }
     const rainGeo = new THREE.BufferGeometry();
     rainGeo.setAttribute("position", new THREE.BufferAttribute(rainPositions, 3));
     rainGeoRef.current = rainGeo;
 
     const rainMat = new THREE.PointsMaterial({
-      color: 0x60a5fa,
-      size: 0.09,
+      color: 0x38bdf8,
+      size: 0.22,
       transparent: true,
-      opacity: 0.85,
+      opacity: 0.95,
     });
     const rainPoints = new THREE.Points(rainGeo, rainMat);
     rainPoints.visible = false;
@@ -425,6 +427,8 @@ export default function FarmSimulation3D({ onAskAI, onClose }: FarmSimulationPro
         if (fireLightRef.current) {
           fireLightRef.current.intensity = 3.0 + Math.sin(elapsed * 14) * 1.5;
         }
+      } else if (fireLightRef.current) {
+        fireLightRef.current.intensity = 0;
       }
 
       renderer.render(scene, camera);
@@ -504,11 +508,12 @@ export default function FarmSimulation3D({ onAskAI, onClose }: FarmSimulationPro
       }
     });
 
-    // 4. Rising Floodwater Plane (Starts rising above furrows at > 65% moisture)
+    // 4. Rising Floodwater Plane (Rises visibly during active rain or when moisture > 45%)
     if (waterMeshRef.current) {
-      if (soilMoisture !== null && soilMoisture > 65) {
-        const ratio = (soilMoisture - 65) / 35; // 0.0 to 1.0
-        waterMeshRef.current.position.y = 0.05 + ratio * 0.52;
+      const levelTrigger = Math.max(soilMoisture ?? 0, isRaining ? Math.max(rainIntensity, 55) : 0);
+      if (levelTrigger > 45) {
+        const ratio = (levelTrigger - 45) / 55; // 0.0 to 1.0
+        waterMeshRef.current.position.y = 0.04 + ratio * 0.52;
         waterMeshRef.current.visible = true;
       } else {
         waterMeshRef.current.position.y = -0.1;
@@ -521,8 +526,8 @@ export default function FarmSimulation3D({ onAskAI, onClose }: FarmSimulationPro
       rainPointsRef.current.visible = isRaining;
     }
     if (isRaining) {
-      sceneRef.current.background = new THREE.Color("#64748b");
-      if (sceneRef.current.fog) sceneRef.current.fog.color.setHex(0x64748b);
+      sceneRef.current.background = new THREE.Color("#334155");
+      if (sceneRef.current.fog) sceneRef.current.fog.color.setHex(0x334155);
     } else {
       sceneRef.current.background = new THREE.Color("#e8f1f5");
       if (sceneRef.current.fog) sceneRef.current.fog.color.setHex(0xe8f1f5);
@@ -535,7 +540,7 @@ export default function FarmSimulation3D({ onAskAI, onClose }: FarmSimulationPro
     if (fireLightRef.current) {
       fireLightRef.current.intensity = isFire ? 3.5 : 0;
     }
-  }, [soilMoisture, isRaining, isFire, isOnline]);
+  }, [soilMoisture, rainIntensity, isRaining, isFire, isOnline]);
 
   // Helper to send simulated test readings or reset to awaiting hardware
   const sendTestTelemetry = async (payload: Record<string, any>) => {
@@ -697,7 +702,31 @@ export default function FarmSimulation3D({ onAskAI, onClose }: FarmSimulationPro
           </div>
         )}
 
-        {soilMoisture !== null && soilMoisture >= 80 && !isFire && (
+        {isRaining && !isFire && (
+          <div className="bg-sky-600 text-white px-4 py-2.5 flex items-center justify-between text-xs font-semibold z-20 shadow-md">
+            <div className="flex items-center gap-2">
+              <CloudRain className="h-4 w-4 shrink-0 animate-bounce" />
+              <span>
+                🌧️ <strong>ACTIVE RAINFALL DETECTED ON SENSOR PLATE!</strong> Rain Intensity:{" "}
+                <strong>{rainIntensity}%</strong> (ADC: {rawRain}) • Surface water accumulating on plot!
+              </span>
+            </div>
+            {onAskAI && (
+              <button
+                onClick={() =>
+                  onAskAI(
+                    `URGENT: Active rainfall (${rainIntensity}% intensity) and soil saturation (${soilMoisture}%) detected on our farm plot. What immediate furrow drainage and anti-fungal root treatments should we apply?`
+                  )
+                }
+                className="bg-white text-sky-700 px-3 py-1 rounded-lg text-xs font-bold hover:bg-sky-50 transition-colors shrink-0"
+              >
+                Ask AI for Rain & Flood Plan
+              </button>
+            )}
+          </div>
+        )}
+
+        {soilMoisture !== null && soilMoisture >= 80 && !isRaining && !isFire && (
           <div className="bg-blue-600 text-white px-4 py-2.5 flex items-center justify-between text-xs font-semibold z-20 shadow-md">
             <div className="flex items-center gap-2">
               <CloudRain className="h-4 w-4 shrink-0 animate-bounce" />
@@ -795,13 +824,13 @@ export default function FarmSimulation3D({ onAskAI, onClose }: FarmSimulationPro
                   awaitingHardware
                     ? "bg-slate-200 text-slate-500"
                     : isRaining
-                    ? "bg-blue-500/15 text-blue-600"
+                    ? "bg-sky-500/20 text-sky-600 animate-pulse"
                     : "bg-emerald-500/15 text-emerald-600"
                 }`}
               >
                 <CloudRain className="h-5 w-5" />
               </div>
-              <div className="flex flex-col min-w-0">
+              <div className="flex flex-col min-w-0 flex-1">
                 <span className="text-[10px] uppercase font-bold tracking-wider text-[var(--text-tertiary)]">
                   Rain Sensor (GPIO 35)
                 </span>
@@ -810,12 +839,20 @@ export default function FarmSimulation3D({ onAskAI, onClose }: FarmSimulationPro
                     Awaiting sensor…
                   </span>
                 ) : (
-                  <span className="text-xs font-bold">
-                    {isRaining ? "🌧️ Raining on Plot" : "☀️ Clear / Dry Plate"}
+                  <span className={`text-xs font-bold ${isRaining ? "text-sky-600" : ""}`}>
+                    {isRaining ? `🌧️ Raining (${rainIntensity}% Intensity)` : "☀️ Clear / Dry Plate"}
                   </span>
                 )}
+                {isRaining && (
+                  <div className="w-full h-1.5 bg-slate-200 rounded-full overflow-hidden mt-1">
+                    <div
+                      className="h-full bg-sky-500 transition-all duration-300"
+                      style={{ width: `${rainIntensity}%` }}
+                    />
+                  </div>
+                )}
                 {rawRain !== null && (
-                  <span className="text-[10px] font-mono text-[var(--text-tertiary)]">
+                  <span className="text-[10px] font-mono text-[var(--text-tertiary)] mt-0.5">
                     Raw ADC: {rawRain}
                   </span>
                 )}

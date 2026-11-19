@@ -159,7 +159,7 @@ def create_project_overview():
         ],
         [
             Paragraph("<b>Target Region:</b> Nigeria & Sub-Saharan Africa", body_style),
-            Paragraph("<b>Deployment:</b> Cloud Next.js 16 (Vercel) + ESP32 Edge Sensor", body_style)
+            Paragraph("<b>Deployment:</b> nino-three.vercel.app + Supabase + Wireless ESP-32D", body_style)
         ]
     ]
     meta_table = Table(meta_data, colWidths=[250, 254])
@@ -179,7 +179,7 @@ def create_project_overview():
         body_style
     ))
     story.append(Paragraph(
-        "<b>El-Nino</b> is a complete cyber-physical platform engineered to eliminate these bottlenecks. Combining an affordable <b>ESP32 IoT sensor node</b> (soil moisture, rainfall, wildfire detection), a <b>real-time 3D Digital Twin simulation</b> of the farmland, and <b>Google Gemini 3.1 Flash multimodal AI</b>, El-Nino empowers farmers with proactive hazard alerts, instant leaf disease diagnosis from smartphone photos, and local Naira (₦) market intelligence.",
+        "<b>El-Nino</b> is a wireless cyber-physical platform engineered to eliminate these bottlenecks. Combining a power-bank-powered <b>ESP-32D IoT node</b> (soil moisture, rain intensity, flood depth, IR flame detection, and a local 85dB active fire buzzer), <b>Supabase cloud telemetry sync</b> (broadcasting live alarms to all phones at <b>nino-three.vercel.app</b>), a <b>real-time Three.js 3D Digital Twin</b>, and <b>Google Gemini 3.1 Flash AI with native sensor tool calling</b>, El-Nino delivers instant hazard protection and grounded Naira (₦) agronomic guidance.",
         body_style
     ))
 
@@ -245,31 +245,36 @@ def create_project_overview():
     ))
 
     hw_specs = [
-        [Paragraph("<b>Hardware Component</b>", body_style), Paragraph("<b>Model / Specs</b>", body_style), Paragraph("<b>Functional Responsibility in Farmland</b>", body_style)],
+        [Paragraph("<b>Hardware Component</b>", body_style), Paragraph("<b>Pin & Model Specs</b>", body_style), Paragraph("<b>Functional Responsibility in Farmland</b>", body_style)],
         [
-            Paragraph("<b>Microcontroller Node</b>", body_style),
-            Paragraph("ESP32-WROOM-32 (Dual-core 240MHz, Wi-Fi/BLE)", body_style),
-            Paragraph("Gathers analog and digital telemetry; runs local threshold evaluation; transmits encrypted telemetry packets over HTTP/MQTT to Vercel Next.js edge API.", body_style)
+            Paragraph("<b>Wireless MCU Node</b>", body_style),
+            Paragraph("38-Pin ESP-32D (240MHz Wi-Fi) + 5V Power Bank", body_style),
+            Paragraph("Runs completely cord-free via 5V power bank; polls ADC1 sensors every 500ms; streams HTTPS JSON telemetry to Vercel + Supabase (1.5s heartbeat + instant fire/rain interrupt push).", body_style)
         ],
         [
-            Paragraph("<b>Soil Moisture Sensor</b>", body_style),
-            Paragraph("Capacitive Soil Probe v1.2 (Corrosion-resistant)", body_style),
-            Paragraph("Measures soil dielectric permittivity (GPIO 34 ADC). Detects soil drought (<30%), optimal root zone moisture (40-75%), and dangerous waterlogging (>85%).", body_style)
+            Paragraph("<b>Soil Moisture Probes</b>", body_style),
+            Paragraph("HW-080 + LM393 (GPIO 34 & VP/36 ADC1)", body_style),
+            Paragraph("Reads root-zone saturation (0–100%). Detects drought (<25%), optimal moisture (30–75%), and waterlogging (>80%).", body_style)
         ],
         [
-            Paragraph("<b>Raindrop Impact Sensor</b>", body_style),
-            Paragraph("FC-37 Rain Board + LM393 Comparator", body_style),
-            Paragraph("Detects surface raindrop precipitation (GPIO 35 ADC). Distinguishes light drizzle from severe downpours that cause surface flash flooding.", body_style)
+            Paragraph("<b>Raindrop Grid Sensor</b>", body_style),
+            Paragraph("FC-37 Plate + LM393 (GPIO 35 ADC1)", body_style),
+            Paragraph("Detects rain droplets and measures rainfall intensity (0–100%), triggering storm clouds & 2,400 3D raindrops.", body_style)
+        ],
+        [
+            Paragraph("<b>Flood Water Level Strip</b>", body_style),
+            Paragraph("Red Water Depth PCB (GPIO 32 ADC1)", body_style),
+            Paragraph("Directly measures standing flash-flood depth (0–100%) on the plot, driving the rising 3D floodwater surface plane.", body_style)
         ],
         [
             Paragraph("<b>Wildfire / Flame Sensor</b>", body_style),
-            Paragraph("YG1006 Infrared Flame Sensor (760nm–1100nm)", body_style),
-            Paragraph("Monitors ambient thermal/IR emissions with 60° detection angle (GPIO 32 ADC/D0). Detects dry-season bushfires, trash burning, or equipment fires.", body_style)
+            Paragraph("YG1006 IR Flame Module (GPIO 33 Digital In)", body_style),
+            Paragraph("Optical 760–1100nm infrared detector (Active LOW). Detects open flames/bushfires and immediately triggers both local & cloud alarms.", body_style)
         ],
         [
-            Paragraph("<b>Alert Actuator & Power</b>", body_style),
-            Paragraph("Active 85dB Buzzer + 5V Solar Powerbank / Li-Ion", body_style),
-            Paragraph("Provides immediate localized on-field audible warning when fire or flash flooding is detected, backed by independent solar-rechargeable power.", body_style)
+            Paragraph("<b>Physical & Web Fire Alarm</b>", body_style),
+            Paragraph("Active 2-Pin Buzzer (GPIO 25) + Web Audio Siren", body_style),
+            Paragraph("Physical 85dB buzzer pulses locally in <20ms (even offline); Supabase sync triggers two-tone 880Hz/1320Hz siren + vibration on all judges' phones.", body_style)
         ]
     ]
 
@@ -285,25 +290,24 @@ def create_project_overview():
     story.append(Spacer(1, 10))
 
     # 4. 3D Digital Twin Simulation Engine
-    story.append(Paragraph("4. The 3D Farmland Digital Twin Simulation", h1_style))
+    story.append(Paragraph("4. The 3D Farmland Digital Twin & Multi-Phone Sync", h1_style))
     story.append(Paragraph(
-        "A standout feature of El-Nino is its interactive WebGL/Three.js 3D simulation embedded directly inside the Next.js app. The 3D plot mirrors what the ESP32 sensors detect in real time:",
+        "El-Nino pairs an interactive Three.js 3D Digital Twin with Supabase PostgreSQL cloud persistence (<i>farm_telemetry</i> &amp; <i>farm_alerts</i>) so every judge's phone on <b>nino-three.vercel.app</b> sees the exact same live physical farm state simultaneously:",
         body_style
     ))
-    story.append(Paragraph("• <b>Dynamic Rain Particle Engine:</b> When raindrops touch the physical rain sensor, the 3D sky shifts from sunny to overcast, and thousands of animated 3D rain particles streak down with splash ripple geometry on the soil.", bullet_style))
-    story.append(Paragraph("• <b>Soil Moisture State Shifts:</b> The 3D soil terrain transitions dynamically between three states: Parched/Cracked pale brown (0-30%), Rich Dark Loam (40-75%), and Waterlogged (80%+).", bullet_style))
-    story.append(Paragraph("• <b>Rising Floodwater Plane:</b> As soil moisture exceeds 80%, a translucent, reflective blue flood plane visibly rises above the soil surface, submerging plant roots to clearly depict root rot and asphyxiation risk.", bullet_style))
-    story.append(Paragraph("• <b>Wildfire Heat Flare Simulation:</b> When flame is detected, a pulsing red thermal perimeter glow surrounds the 3D plot, activating an audio alert and flashing hazard badge.", bullet_style))
+    story.append(Paragraph("• <b>3D Physical Hardware Twins:</b> The interactive 3D planter box models the actual ESP-32D, Active Buzzer halo, Soil Probe, Red Water Strip, Rain Plate, and Flame Beacon.", bullet_style))
+    story.append(Paragraph("• <b>Dynamic Rain &amp; Rising Floodwater:</b> 2,400 animated sky-blue raindrops fall during precipitation while a reflective floodwater plane visibly rises over the crop ridges as moisture/water depth increases.", bullet_style))
+    story.append(Paragraph("• <b>Wildfire Siren Across All Phones:</b> When flame hits GPIO 33, the physical buzzer blares and every armed browser sounds a Web Audio two-tone siren (880Hz ↔ 1320Hz) with flashing red wildfire banners.", bullet_style))
 
-    # 5. Multimodal AI & Grounded Knowledge
-    story.append(Paragraph("5. AI Brain: Multimodal Vision & Grounded Agronomy", h1_style))
+    # 5. Multimodal AI & Native Sensor Tool Calling
+    story.append(Paragraph("5. AI Brain: Native Sensor Tool Calling &amp; Plant Pathology", h1_style))
     story.append(Paragraph(
-        "Rather than relying on generic AI, El-Nino implements strict domain grounding tailored for Nigerian smallholders:",
+        "Powered by Google Gemini 3.1 Flash (@google/genai) with real-time function calling and Nigerian domain grounding:",
         body_style
     ))
-    story.append(Paragraph("• <b>Plant Pathology Diagnostic Vision:</b> Farmers snap a leaf photo. Gemini 3.1 Flash inspects lesion morphology (e.g. concentric target rings in Tomato Early Blight, water-soaked brown rot in Late Blight, pustules in Maize Rust). It outputs structured diagnostic headers with severity ratings.", bullet_style))
-    story.append(Paragraph("• <b>Local Input Pricing in Naira (₦):</b> Prescribes exact chemical and organic recipes (Mancozeb, Ridomil Gold, Cypermethrin, neem oil extract) with dilution rates per standard 15L/16L knapsack sprayer and local cost estimates.", bullet_style))
-    story.append(Paragraph("• <b>Grounded Crop Knowledge Base:</b> Full profiles for 20 staple crops (Cassava, Maize, Yam, Groundnut, Tomato, etc.) detailing growing zones, planting/harvesting calendars, NPK/Urea split application timings, and soil types.", bullet_style))
+    story.append(Paragraph("• <b>Native Sensor Tool Calling:</b> Asking <i>'How is my soil moisture right now?'</i> triggers Gemini to call <b>get_live_farm_sensors()</b> and <b>get_farm_alert_history()</b> directly against Supabase before streaming grounded advice with a live sensor tool badge.", bullet_style))
+    story.append(Paragraph("• <b>Plant Pathology Vision Scanner:</b> Snap or upload a leaf photo for instant diagnosis (Tomato Late Blight, Maize Rust, Cassava Mosaic), severity scoring, and knapsack dilution recipes in Nigerian Naira (₦).", bullet_style))
+    story.append(Paragraph("• <b>Grounded Agronomy Database:</b> 20 staple crops (local Yoruba, Hausa, Igbo names), NPK/Urea schedules, and live market prices across Mile 12, Bodija, and Dawanau.", bullet_style))
 
     # Page Break for Demo & Impact
     story.append(PageBreak())
@@ -311,36 +315,36 @@ def create_project_overview():
     # 6. Live Hackathon Demonstration Walkthrough
     story.append(Paragraph("6. Step-by-Step Live Hackathon Demo Script", h1_style))
     story.append(Paragraph(
-        "To maximize judging score and demonstrate true cyber-physical innovation, Team 8 can execute this dramatic 3-minute stage demo:",
+        "To maximize judging score and demonstrate true wireless cyber-physical innovation, Team 8 can execute this 3-minute stage demo:",
         body_style
     ))
 
     demo_steps = [
-        [Paragraph("<b>Demo Step</b>", body_style), Paragraph("<b>Physical Action (Stage)</b>", body_style), Paragraph("<b>App & 3D Simulation Response (Screen)</b>", body_style)],
+        [Paragraph("<b>Demo Step</b>", body_style), Paragraph("<b>Physical Action (Stage)</b>", body_style), Paragraph("<b>App, Judges' Phones &amp; 3D Response</b>", body_style)],
         [
-            Paragraph("<b>Step 1: Baseline State</b>", body_style),
-            Paragraph("Show physical soil pot with ESP32 probe inserted. Normal dry/moist soil.", body_style),
-            Paragraph("App displays green status dot: 'Gemini Online • Soil Moisture 45% (Optimal) • Clear Sky'. 3D farmland shows healthy maize stalks in rich loam.", body_style)
+            Paragraph("<b>Step 1: Wireless Power-Bank Boot</b>", body_style),
+            Paragraph("Plug ESP-32D into 5V Power Bank (no laptop cord!). Judges open nino-three.vercel.app &amp; tap 'Arm Phone Fire Siren'.", body_style),
+            Paragraph("Active buzzer gives confirmation chirp. 3D Digital Twin turns green: 'ESP32 Live' on laptop and all judges' phones simultaneously.", body_style)
         ],
         [
-            Paragraph("<b>Step 2: Flood & Rain Simulation</b>", body_style),
-            Paragraph("Pour water from a water bottle over the soil and onto the rain sensor plate.", body_style),
-            Paragraph("<b>INSTANT REACTION:</b> 3D simulation triggers falling rain particles and storm clouds. Soil moisture metric shoots to 92%. A reflective floodwater plane rises above the soil. App triggers <b>'⚠️ FLOOD HAZARD DETECTED'</b> alert.", body_style)
+            Paragraph("<b>Step 2: AI Live Sensor Tool Call</b>", body_style),
+            Paragraph("Ask AI Chat: 'How is the soil moisture and fire status on my farm right now?'", body_style),
+            Paragraph("Gemini invokes <b>get_live_farm_sensors()</b>, shows the green <b>AI Read Live Tool</b> badge, and reports exact real-time ESP32 readings.", body_style)
         ],
         [
-            Paragraph("<b>Step 3: AI Emergency Action</b>", body_style),
-            Paragraph("Tap the one-click 'Ask El-Nino for Emergency Drainage Plan' button on the alert.", body_style),
-            Paragraph("Gemini streams immediate emergency advice: digging lateral furrows, draining waterlogged beds, and spraying copper fungicide to stop post-flood rot.", body_style)
+            Paragraph("<b>Step 3: Flood &amp; Rain Simulation</b>", body_style),
+            Paragraph("Pour water onto the FC-37 Rain Plate (G35), Soil Probe (G34), and Red Water Strip (G32).", body_style),
+            Paragraph("<b>INSTANT REACTION:</b> 2,400 3D raindrops fall, storm sky activates, floodwater plane rises over ridges, and 1-click AI Drainage Plan appears.", body_style)
         ],
         [
-            Paragraph("<b>Step 4: Wildfire / Flame Test</b>", body_style),
-            Paragraph("Flick a lighter safely 10-15cm away from the flame sensor.", body_style),
-            Paragraph("<b>INSTANT ALARM:</b> ESP32 on-board buzzer sounds. 3D simulation pulses red. App flashes <b>'🔥 WILDFIRE OUTBREAK DETECTED'</b> with immediate emergency firebreak advice.", body_style)
+            Paragraph("<b>Step 4: Wildfire / Flame Alarm</b>", body_style),
+            Paragraph("Flick a lighter 15cm from the IR Flame Sensor (GPIO 33).", body_style),
+            Paragraph("<b>INSTANT SIREN:</b> Physical buzzer (GPIO 25) blares AND every judge's phone flashes red + sounds the Web Audio wildfire siren + logs event in Supabase.", body_style)
         ],
         [
             Paragraph("<b>Step 5: Plant Pathology Scan</b>", body_style),
             Paragraph("Upload photo of a diseased tomato leaf with late blight lesions.", body_style),
-            Paragraph("Gemini visual scanner outputs: <b>[Tomato Late Blight • High Severity]</b>, knapsack spraying recipe (Ridomil Gold MZ), dosage, and estimated cost in Naira (₦3,500-4,500).", body_style)
+            Paragraph("Gemini diagnoses <b>[Tomato Late Blight • High Severity]</b>, prescribes Ridomil Gold knapsack dosage, and quotes cost in Nigerian Naira (₦).", body_style)
         ]
     ]
 

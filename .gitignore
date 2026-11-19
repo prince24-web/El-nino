@@ -40,3 +40,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# hardware secrets & PlatformIO build cache
+hardware/secrets.h
+hardware/include/secrets.h
+hardware/.pio/
+hardware/read_com3.py

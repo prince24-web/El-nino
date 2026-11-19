@@ -54,56 +54,39 @@ In agricultural hackathons across Africa (e.g. Buildathon Group 8), four interco
 
 ---
 
+## 📚 Judge Technical Documentation Suite
+
+Detailed engineering documentation prepared for hackathon evaluation is available inside [`docs/`](docs/):
+- **[System Architecture (`docs/ARCHITECTURE.md`)](docs/ARCHITECTURE.md)** — Wireless IoT $\rightarrow$ Vercel $\rightarrow$ Supabase $\rightarrow$ Judges' Phones topology, latency budgets, and Gemini tool-calling flow.
+- **[Hardware Wiring & Calibration Guide (`docs/HARDWARE_WIRING_GUIDE.md`)](docs/HARDWARE_WIRING_GUIDE.md)** — Exact 38-pin `ESP-32D` pinout, `GPIO 25` Active Buzzer, BOM in Nigerian Naira (₦), and wireless power-bank setup.
+- **[API & Gemini AI Tools (`docs/API_AND_AI_TOOLS.md`)](docs/API_AND_AI_TOOLS.md)** — `/api/telemetry` & `/api/chat` schemas, Supabase PostgreSQL RLS tables, and native function-calling definitions.
+- **[Demo Day Runbook (`docs/DEMO_DAY_RUNBOOK.md`)](docs/DEMO_DAY_RUNBOOK.md)** — Step-by-step live stage script, hotspot setup, and phone alarm arming instructions.
+
+---
+
 ## 🏗️ System Architecture & Data Flow
 
 ```text
  ┌────────────────────────────────────────────────────────────────────────┐
- │                      Client Layer (Mobile / Desktop)                   │
- │   • Warm Earthy Nature Theme (Light default / Dark toggle)             │
- │   • File Upload / Mobile Camera Capture / Drag & Drop                  │
- │   • Real-Time Edge Token Stream Consumer (SSE / ReadableStream)        │
+ │                 Physical Demo Farm (Wireless 5V Power Bank)            │
+ │  • Soil Moisture (GPIO 34/VP) • Rain Grid (GPIO 35) • Water Strip (32) │
+ │  • IR Flame Sensor (GPIO 33) ──(<20ms)──► Active Buzzer Siren (GPIO 25)│
  └───────────────────────────────────┬────────────────────────────────────┘
-                                     │
-                     HTTP POST /api/chat (JSON + Base64)
-                                     │
+                                     │ HTTPS POST /api/telemetry (Wi-Fi)
                                      ▼
  ┌────────────────────────────────────────────────────────────────────────┐
- │            Next.js 16 Edge / Serverless API Route Layer                │
- │                         (src/app/api/chat/route.ts)                    │
+ │            Next.js 16 Vercel Edge + Supabase PostgreSQL                │
+ │  • farm_telemetry (live multi-device sync) • farm_alerts (hazard log)  │
  └───────────────┬───────────────────────────────────────┬────────────────┘
-                 │                                       │
+                 │ 1s Global Poll                        │ Tool Calling
                  ▼                                       ▼
  ┌───────────────────────────────┐       ┌────────────────────────────────┐
- │ Grounded Local Agronomy Engine│       │   Multimodal Payload Assembly  │
- │   (src/lib/agronomy-data.ts)  │       │ • System Instruction Pipeline  │
- │ • 20 Staple Crops (Local Names│       │ • Inline Data (MIME + Base64)  │
- │   in Yoruba, Hausa, Igbo)     │       │ • Multi-turn Context History   │
- │ • 15 Pathogens & Vector Cycles│       │ • PlantVillage Pathology Taxonomy
- │ • 24 Agrochemical Treatments  │       └────────────────┬───────────────┘
- │ • Real-time ₦ Market Prices   │                        │
- └───────────────┬───────────────┘                        │
-                 │                                        │
-                 └───────────────────┬────────────────────┘
-                                     │
-                      Streaming API Request (REST / gRPC)
-                                     │
-                                     ▼
- ┌────────────────────────────────────────────────────────────────────────┐
- │               Google Gemini 3.1 Flash AI Engine                        │
- │ • Multimodal Vision: Lesion morphology, discoloration, fungal blooms   │
- │ • Pathogen Classification: Severity estimation (Low / Med / High / Max)│
- │ • Grounded Generation: Actionable dilution rates (per 15L knapsack)    │
- └───────────────────────────────────┬────────────────────────────────────┘
-                                     │
-                         Edge Token Chunk Stream
-                                     │
-                                     ▼
- ┌────────────────────────────────────────────────────────────────────────┐
- │               Live Markdown Rendering & Diagnostic Parser              │
- │ • Diagnostic Header Extraction: [DIAGNOSIS: ... | SEVERITY: ...]       │
- │ • Dynamic Pathology Badge Injection                                    │
- │ • Live Markdown Tables, Bullet Points, and Dosage Specs                │
- └────────────────────────────────────────────────────────────────────────┘
+ │ Farmers' & Judges' Phones     │       │ Google Gemini 3.1 Flash AI     │
+ │ • Web Audio Fire Siren (880Hz)│       │ • get_live_farm_sensors()      │
+ │ • Global Wildfire Banner      │       │ • get_farm_alert_history()     │
+ │ • Three.js 3D Farm Twin       │       │ • lookup_nigerian_agronomy()   │
+ │ • Leaf Disease Photo Scanner  │       │ • Multimodal Leaf Pathology    │
+ └───────────────────────────────┘       └────────────────────────────────┘
 ```
 
 ---
@@ -174,14 +157,15 @@ Chunks are passed into a `ReadableStream` via `TextEncoder`, streaming markdown 
 
 | Layer | Technology | Purpose |
 | :--- | :--- | :--- |
-| **Framework** | Next.js 16 (App Router) | Modern React 19 server/client components and routing |
-| **Language** | TypeScript 5 | Strict type safety across agronomic data schemas and API payloads |
-| **Styling** | Tailwind CSS v4 | High-performance atomic CSS with CSS variable design tokens |
-| **AI Foundation**| Google Gemini 3.1 Flash | High-speed multimodal vision and low-latency token streaming |
-| **SDK** | `@google/genai` (v3.2) | Official Google Gen AI client library |
-| **Icons** | `lucide-react` | Clean, accessible agricultural and UI icons |
-| **Markdown** | `react-markdown` + `remark-gfm` | Live rendering of agricultural tables, lists, and formatting |
-| **Deployment** | Vercel | Global edge CDN, zero-config serverless function hosting |
+| **Framework** | Next.js 16 (App Router) | Modern React 19 server/client components and serverless API routes |
+| **Language** | TypeScript 5 | Strict type safety across agronomic data schemas, tools, and telemetry |
+| **Styling** | Tailwind CSS v4 | Light-first earthy design system with CSS variable design tokens |
+| **3D Twin** | Three.js (WebGL) | Interactive 3D farmland plot with 2,400 raindrops, flood plane & flame flares |
+| **IoT Hardware** | `ESP-32D` + 5 Sensors + Active Buzzer | Wireless power-bank node (`GPIO 34, 36, 35, 32, 33, 25`) sending HTTPS telemetry |
+| **Persistence** | Supabase PostgreSQL (RLS) | Multi-device real-time sync (`farm_telemetry`) & hazard audit log (`farm_alerts`) |
+| **AI Foundation** | Google Gemini 3.1 Flash (`@google/genai`) | Multimodal pathology vision + native function calling on live farm sensors |
+| **Web Alarm** | Web Audio API + Haptic API | Zero-asset two-tone fire siren (`880Hz ↔ 1320Hz`) on phones & laptops |
+| **Deployment** | Vercel (`nino-three.vercel.app`) | Global edge CDN & serverless hosting |
 
 ---
 
@@ -202,6 +186,8 @@ npm install
 Create a `.env.local` file in the project root:
 ```env
 GEMINI_API_KEY=your_gemini_api_key_here
+NEXT_PUBLIC_SUPABASE_URL=https://your-project-ref.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_publishable_key_here
 ```
 
 ### 4. Run Development Server
@@ -236,8 +222,10 @@ npm run start
 
 - [x] Multimodal leaf pathology scanner with disease & severity classification.
 - [x] Grounded Nigerian crop knowledge, Naira (₦) prices, and fertilizer schedules.
-- [x] Edge token streaming with live markdown rendering.
-- [x] Light-mode-first earthy UI with responsive mobile navigation.
+- [x] Wireless ESP-32D IoT hardware integration + Physical Active Buzzer (`GPIO 25`).
+- [x] Interactive Three.js 3D Farm Digital Twin + Supabase cloud persistence across judges' phones.
+- [x] Native Gemini AI Function Calling against live physical sensors & hazard logs.
+- [x] Global Web Audio Fire Siren with mobile haptic vibration & 1-tap arming.
 - [ ] **Voice-in / Voice-out Multilingual Interface**: Integrating Gemini Live / Audio to allow illiterate farmers to speak in Yoruba, Hausa, Igbo, or Pidgin.
 - [ ] **Hyperlocal Satellite Weather Alerts**: Integrating real-time precipitation and drought forecasting for advance pest outbreak alerts.
 - [ ] **PWA Offline ServiceWorker**: Caching common crop disease guides for low-connectivity rural farm environments.

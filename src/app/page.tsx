@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import FarmSimulation3D from "@/components/FarmSimulation3D";
+import { useFarmTelemetry } from "@/hooks/useFarmTelemetry";
 import {
   Sprout,
   Plus,
@@ -14,7 +15,6 @@ import {
   Moon,
   Sparkles,
   AlertTriangle,
-  CheckCircle2,
   TrendingUp,
   ShieldCheck,
   Camera,
@@ -23,6 +23,12 @@ import {
   Menu,
   Leaf,
   Activity,
+  Bell,
+  BellOff,
+  Flame,
+  Radio,
+  Volume2,
+  VolumeX,
 } from "lucide-react";
 
 interface Message {
@@ -34,9 +40,25 @@ interface Message {
     disease: string;
     severity: string;
   };
+  toolCalls?: Array<{
+    name: string;
+    summary: string;
+  }>;
 }
 
 export default function Home() {
+  const {
+    telemetry,
+    alerts,
+    soundArmed,
+    isMuted,
+    sirenPlaying,
+    armAudio,
+    testAlarm,
+    toggleMute,
+    refreshTelemetry,
+  } = useFarmTelemetry();
+
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -108,19 +130,36 @@ export default function Home() {
     }
   };
 
-  const parseDiagnosisHeader = (text: string) => {
-    const match = text.match(/\[DIAGNOSIS:\s*([^|]+)\|\s*SEVERITY:\s*([^\]]+)\]/i);
-    if (match) {
-      return {
-        disease: match[1].trim(),
-        severity: match[2].trim(),
-        cleanedText: text.replace(match[0], "").trim(),
-      };
+  const parseStreamMetadata = (text: string) => {
+    let cleaned = text;
+    let disease: string | null = null;
+    let severity: string | null = null;
+    const toolCalls: Array<{ name: string; summary: string }> = [];
+
+    const diagMatch = cleaned.match(
+      /\[DIAGNOSIS:\s*([^|]+)\|\s*SEVERITY:\s*([^\]]+)\]/i
+    );
+    if (diagMatch) {
+      disease = diagMatch[1].trim();
+      severity = diagMatch[2].trim();
+      cleaned = cleaned.replace(diagMatch[0], "");
     }
+
+    const toolRegex = /\[TOOL_CALL:\s*([^|]+)\|\s*SUMMARY:\s*([^\]]+)\]/gi;
+    let toolMatch: RegExpExecArray | null;
+    while ((toolMatch = toolRegex.exec(text)) !== null) {
+      toolCalls.push({
+        name: toolMatch[1].trim(),
+        summary: toolMatch[2].trim(),
+      });
+    }
+    cleaned = cleaned.replace(toolRegex, "");
+
     return {
-      disease: null,
-      severity: null,
-      cleanedText: text,
+      disease,
+      severity,
+      toolCalls,
+      cleanedText: cleaned.trim(),
     };
   };
 
@@ -189,7 +228,8 @@ export default function Home() {
 
         accumulatedText += decoder.decode(value, { stream: true });
 
-        const { disease, severity, cleanedText } = parseDiagnosisHeader(accumulatedText);
+        const { disease, severity, toolCalls, cleanedText } =
+          parseStreamMetadata(accumulatedText);
 
         setMessages((prev) =>
           prev.map((m) =>
@@ -201,6 +241,7 @@ export default function Home() {
                     disease && severity
                       ? { disease, severity }
                       : m.diagnostic,
+                  toolCalls: toolCalls.length > 0 ? toolCalls : m.toolCalls,
                 }
               : m
           )
@@ -334,6 +375,15 @@ export default function Home() {
           <div className="mt-3 flex flex-col gap-2">
             <button
               onClick={() => {
+                handleSubmit("Check my live ESP32 farm sensors right now — how are soil moisture, water level, rain, and fire safety?");
+                setSidebarOpen(false);
+              }}
+              className="rounded-lg border border-[var(--accent-soft-border)] bg-[var(--accent-soft)]/70 p-2.5 text-left text-xs font-semibold text-[var(--accent-strong)] transition-colors hover:bg-[var(--accent-soft)]"
+            >
+              📡 Check live farm sensor status
+            </button>
+            <button
+              onClick={() => {
                 handleSubmit("My tomato leaves have dark water-soaked spots with gray fuzz. What disease is this and how do I cure it?");
                 setSidebarOpen(false);
               }}
@@ -438,6 +488,106 @@ export default function Home() {
           </div>
         </header>
 
+        {/* Global Live Farm Status & Judge Alarm Bar (Visible on Phone & Desktop) */}
+        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--border-subtle)] bg-[var(--bg-surface)] px-4 py-2 text-xs">
+          <button
+            onClick={() => setShowSimulation(true)}
+            className="flex items-center gap-2 rounded-full border border-[var(--border-subtle)] bg-[var(--bg-app)] px-3 py-1 font-medium hover:border-[var(--accent)] transition-colors"
+          >
+            <span
+              className={`h-2 w-2 rounded-full ${
+                telemetry.isFire
+                  ? "bg-red-600 animate-ping"
+                  : telemetry.source === "awaiting" || telemetry.soilMoisture === null
+                  ? "bg-amber-500 animate-pulse"
+                  : telemetry.isOnline
+                  ? "bg-emerald-500"
+                  : "bg-slate-400"
+              }`}
+            />
+            {telemetry.source === "awaiting" || telemetry.soilMoisture === null ? (
+              <span>Awaiting ESP32 Sensors • Open 3D Twin</span>
+            ) : (
+              <span>
+                {telemetry.isFire ? "🔥 FIRE ALERT" : telemetry.isOnline ? "ESP32 Live" : "ESP32 Cached"} • Soil{" "}
+                <strong>{telemetry.soilMoisture}%</strong> • Water{" "}
+                <strong>{telemetry.waterLevel}%</strong>
+                {telemetry.isRaining ? " • 🌧️ Raining" : ""}
+              </span>
+            )}
+          </button>
+
+          <div className="flex items-center gap-1.5">
+            <button
+              onClick={armAudio}
+              className={`flex items-center gap-1.5 rounded-full px-3 py-1 font-semibold border transition-all ${
+                soundArmed
+                  ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-700"
+                  : "border-amber-500/40 bg-amber-500 text-white animate-pulse shadow-xs"
+              }`}
+              title="Unlock browser speaker for live wildfire alarms"
+            >
+              {soundArmed ? (
+                <>
+                  <Bell className="h-3.5 w-3.5" />
+                  <span>Phone Alarm Armed</span>
+                </>
+              ) : (
+                <>
+                  <BellOff className="h-3.5 w-3.5" />
+                  <span>Tap to Arm Phone Fire Siren</span>
+                </>
+              )}
+            </button>
+
+            <button
+              onClick={testAlarm}
+              className="flex items-center gap-1 rounded-full border border-[var(--border-subtle)] bg-[var(--bg-app)] px-2.5 py-1 text-[11px] font-medium hover:bg-[var(--bg-hover)] transition-colors"
+              title="Test Web Audio Fire Siren (1.8s)"
+            >
+              <Volume2 className={`h-3.5 w-3.5 ${sirenPlaying ? "text-red-600 animate-bounce" : "text-[var(--text-secondary)]"}`} />
+              <span className="hidden sm:inline">Test Siren</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Global Wildfire Emergency Banner (Flashes on ALL screens including Judges' Phones) */}
+        {telemetry.isFire && (
+          <div className="bg-red-600 text-white px-4 py-2.5 flex flex-wrap items-center justify-between gap-2 text-xs font-semibold animate-pulse shadow-md z-30">
+            <div className="flex items-center gap-2">
+              <Flame className="h-4 w-4 shrink-0" />
+              <span>
+                🔥 <strong>WILDFIRE EMERGENCY DETECTED!</strong> IR Flame Sensor triggered on demo farm — physical buzzer &amp; alert active!
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={toggleMute}
+                className="flex items-center gap-1 rounded-lg border border-white/40 bg-red-700 px-2.5 py-1 text-xs font-bold hover:bg-red-800"
+              >
+                {isMuted ? <VolumeX className="h-3.5 w-3.5" /> : <Volume2 className="h-3.5 w-3.5" />}
+                {isMuted ? "Unmute" : "Mute Siren"}
+              </button>
+              <button
+                onClick={() => setShowSimulation(true)}
+                className="rounded-lg border border-white/40 bg-red-700 px-2.5 py-1 text-xs font-bold hover:bg-red-800"
+              >
+                View 3D Twin
+              </button>
+              <button
+                onClick={() =>
+                  handleSubmit(
+                    "CRITICAL: Our farm ESP32 flame sensor just triggered a WILDFIRE ALARM! Give me immediate emergency firebreak, crop protection, and containment steps."
+                  )
+                }
+                className="rounded-lg bg-white text-red-700 px-3 py-1 text-xs font-bold hover:bg-red-50 shadow-xs"
+              >
+                Emergency Fire Protocol
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Messages Scroll Area */}
         <div className="flex-1 overflow-y-auto px-4 py-6 md:px-12 lg:px-24">
           {messages.length === 0 ? (
@@ -529,6 +679,24 @@ export default function Home() {
                           alt="Crop scan"
                           className="h-auto w-full object-cover max-h-60"
                         />
+                      </div>
+                    )}
+
+                    {/* Gemini Live IoT Tool-Call Badges */}
+                    {msg.toolCalls && msg.toolCalls.length > 0 && (
+                      <div className="mb-3 flex flex-col gap-1.5">
+                        {msg.toolCalls.map((tc, tIdx) => (
+                          <div
+                            key={tIdx}
+                            className="flex items-center gap-2 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 text-[11px] font-semibold text-emerald-800 dark:text-emerald-300"
+                          >
+                            <Radio className="h-3.5 w-3.5 shrink-0 text-emerald-600" />
+                            <span>
+                              AI Read Live Tool ({tc.name}):{" "}
+                              <span className="font-normal">{tc.summary}</span>
+                            </span>
+                          </div>
+                        ))}
                       </div>
                     )}
 
@@ -667,6 +835,13 @@ export default function Home() {
       {/* 3D Farmland Digital Twin Simulation Modal */}
       {showSimulation && (
         <FarmSimulation3D
+          externalTelemetry={telemetry}
+          externalAlerts={alerts}
+          soundArmed={soundArmed}
+          isMuted={isMuted}
+          onToggleMute={toggleMute}
+          onArmAudio={armAudio}
+          onRefreshTelemetry={refreshTelemetry}
           onAskAI={(prompt) => {
             setShowSimulation(false);
             handleSubmit(prompt);

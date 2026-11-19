@@ -16,7 +16,7 @@
 | **4** | **Raindrop Sensor** | `FC-37` Grid Plate + `LM393` (`AO` out) | ₦1,500 | Rain detection & precipitation intensity (`0–100%`) |
 | **5** | **Water Level Strip** | Red Water Depth PCB Sensor (`S` out) | ₦1,000 | Measures standing flash-flood depth (`0–100%`) |
 | **6** | **IR Flame Detector** | `YG1006` 3-Pin Module (`760–1100nm`) | ₦1,200 | Optical wildfire/bushfire flame detection |
-| **7** | **Fire Alarm Buzzer** | 2-Pin **Active Buzzer** (solid black base) | ₦400 | Immediate 85dB physical alarm on wildfire detection |
+| **7** | **Fire Alarm Buzzer** | 2-Pin **Passive Buzzer** (`1800Hz/1200Hz` PWM) | ₦400 | Immediate two-tone physical alarm on wildfire detection |
 | **8** | **Wiring & Breadboard** | Mini breadboard + jumper wires + 5V Power Bank | ₦2,500 | Solderless field assembly |
 | | **Total Kit Cost** | | **~₦14,500 (~$9)** | Affordable for smallholder cooperatives |
 
@@ -39,7 +39,7 @@
   └──────────────────────────────────────────────────────────────────────────────┘
    [3V3] EN [VP] VN [34] [35] [32] [33] [25]  26  27  14  12 [GND] 13  D2  D3 CMD 5V
      │       │       │    │    │    │    │                     │
-     │       │       │    │    │    │    └─► 🔊 Active Buzzer+ └─► 🔵 Blue Rail (All GNDs)
+     │       │       │    │    │    │    └─► 🔊 Passive Buzzer+└─► 🔵 Blue Rail (All GNDs)
      │       │       │    │    │    └──────► 🔥 Flame Sensor OUT
      │       │       │    │    └───────────► 🌊 Red Water Strip S
      │       │       │    └────────────────► 🌧️ Rain Board AO
@@ -60,7 +60,7 @@
 | **3. FC-37 Rain Plate** | Square rain grid $\rightarrow$ top 2 pins of blue `LM393` board | `VCC` / `GND` / **`AO`** | `3V3` / `GND` / **`GPIO 35`** | `PIN_RAIN = 35` |
 | **4. Red Water Strip** | Single red PCB (keep top pins dry) | `+` / `-` / **`S`** | `3V3` / `GND` / **`GPIO 32`** | `PIN_WATER = 32` |
 | **5. IR Flame Sensor** | Verify printed labels (`VCC`, `GND`, `OUT`), ignore wire colors | `VCC` / `GND` / **`OUT`** | `3V3` / `GND` / **`GPIO 33`** | `PIN_FIRE = 33` |
-| **6. Active Buzzer** | Black cylinder with solid epoxy bottom | Long **`(+)`** / Short **`(-)`** | **`GPIO 25`** / `GND` | `PIN_BUZZER = 25` |
+| **6. Passive Buzzer** | 2-Pin Passive Buzzer (`1800Hz/1200Hz` PWM tone) | Long **`(+)`** / Short **`(-)`** | **`GPIO 25`** / `GND` | `PIN_BUZZER = 25` |
 
 > **Never connect sensors to `D0`, `D1`, `D2`, `D3`, `CMD`, `CLK`, or `GPIO 12`** — those are internal SPI flash & boot strapping pins.
 
@@ -79,7 +79,7 @@
 1. Power the board under normal indoor/stage lighting.
 2. Check that the **Green Power LED** is lit.
 3. If the second trigger LED stays ON without any flame, turn the small blue cross-screw slowly **counter-clockwise** until the trigger LED just turns OFF (`firePin = 1`).
-4. Bring a lighter flame 10–25 cm in front of the black IR photodiode: the trigger LED lights up, `GPIO 33` drops to `0`, and the **Active Buzzer (`GPIO 25`)** pulses immediately (`200ms ON / 120ms OFF`).
+4. Bring a lighter flame 10–25 cm in front of the black IR photodiode: the trigger LED lights up, `GPIO 33` drops to `0`, and the **Passive Buzzer (`GPIO 25`)** pulses immediately with a `1800Hz/1200Hz` PWM siren (`200ms ON / 120ms OFF`).
 
 ---
 
@@ -93,7 +93,7 @@ Edit `hardware/include/secrets.h` (gitignored so credentials never leak) before 
 #define WIFI_SSID_2     ""
 #define WIFI_PASS_2     ""
 #define TELEMETRY_URL   "https://nino-three.vercel.app/api/telemetry"
-#define BUZZER_IS_PASSIVE false   // Active Buzzer (Beep #1)
+#define BUZZER_IS_PASSIVE true    // Passive Buzzer (Beep #2: 1800Hz/1200Hz PWM)
 ```
 
-Flash via PlatformIO (`python -m platformio run -d hardware --target upload`) or run `python hardware/test_sensors.py` over `COM3` to verify every pin and trigger the `'A'` Active Buzzer test.
+Flash via PlatformIO (`python -m platformio run -d hardware --target upload`) or run `python hardware/test_sensors.py` over `COM3` to verify every pin and trigger the `'P'` Passive Buzzer test.

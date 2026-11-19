@@ -15,4 +15,4 @@
 // Buzzer type on GPIO 25:
 // false = 2-pin Active Buzzer (solid black bottom, beeps with 3.3V HIGH)
 // true  = 2-pin Passive Buzzer (green PCB bottom, requires PWM tone)
-#define BUZZER_IS_PASSIVE false
+#define BUZZER_IS_PASSIVE true

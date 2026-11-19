@@ -58,7 +58,7 @@ In agricultural hackathons across Africa (e.g. Buildathon Group 8), four interco
 
 Detailed engineering documentation prepared for hackathon evaluation is available inside [`docs/`](docs/):
 - **[System Architecture (`docs/ARCHITECTURE.md`)](docs/ARCHITECTURE.md)** — Wireless IoT $\rightarrow$ Vercel $\rightarrow$ Supabase $\rightarrow$ Judges' Phones topology, latency budgets, and Gemini tool-calling flow.
-- **[Hardware Wiring & Calibration Guide (`docs/HARDWARE_WIRING_GUIDE.md`)](docs/HARDWARE_WIRING_GUIDE.md)** — Exact 38-pin `ESP-32D` pinout, `GPIO 25` Active Buzzer, BOM in Nigerian Naira (₦), and wireless power-bank setup.
+- **[Hardware Wiring & Calibration Guide (`docs/HARDWARE_WIRING_GUIDE.md`)](docs/HARDWARE_WIRING_GUIDE.md)** — Exact 38-pin `ESP-32D` pinout, `GPIO 25` Passive Buzzer (`1800Hz/1200Hz` PWM), BOM in Nigerian Naira (₦), and wireless power-bank setup.
 - **[API & Gemini AI Tools (`docs/API_AND_AI_TOOLS.md`)](docs/API_AND_AI_TOOLS.md)** — `/api/telemetry` & `/api/chat` schemas, Supabase PostgreSQL RLS tables, and native function-calling definitions.
 - **[Demo Day Runbook (`docs/DEMO_DAY_RUNBOOK.md`)](docs/DEMO_DAY_RUNBOOK.md)** — Step-by-step live stage script, hotspot setup, and phone alarm arming instructions.
 
@@ -70,7 +70,7 @@ Detailed engineering documentation prepared for hackathon evaluation is availabl
  ┌────────────────────────────────────────────────────────────────────────┐
  │                 Physical Demo Farm (Wireless 5V Power Bank)            │
  │  • Soil Moisture (GPIO 34/VP) • Rain Grid (GPIO 35) • Water Strip (32) │
- │  • IR Flame Sensor (GPIO 33) ──(<20ms)──► Active Buzzer Siren (GPIO 25)│
+ │  • IR Flame Sensor (GPIO 33) ─(<20ms)─► Passive Buzzer (GPIO 25 PWM)   │
  └───────────────────────────────────┬────────────────────────────────────┘
                                      │ HTTPS POST /api/telemetry (Wi-Fi)
                                      ▼
@@ -161,7 +161,7 @@ Chunks are passed into a `ReadableStream` via `TextEncoder`, streaming markdown 
 | **Language** | TypeScript 5 | Strict type safety across agronomic data schemas, tools, and telemetry |
 | **Styling** | Tailwind CSS v4 | Light-first earthy design system with CSS variable design tokens |
 | **3D Twin** | Three.js (WebGL) | Interactive 3D farmland plot with 2,400 raindrops, flood plane & flame flares |
-| **IoT Hardware** | `ESP-32D` + 5 Sensors + Active Buzzer | Wireless power-bank node (`GPIO 34, 36, 35, 32, 33, 25`) sending HTTPS telemetry |
+| **IoT Hardware** | `ESP-32D` + 5 Sensors + Passive Buzzer | Wireless power-bank node (`GPIO 34, 36, 35, 32, 33, 25` PWM) sending HTTPS telemetry |
 | **Persistence** | Supabase PostgreSQL (RLS) | Multi-device real-time sync (`farm_telemetry`) & hazard audit log (`farm_alerts`) |
 | **AI Foundation** | Google Gemini 3.1 Flash (`@google/genai`) | Multimodal pathology vision + native function calling on live farm sensors |
 | **Web Alarm** | Web Audio API + Haptic API | Zero-asset two-tone fire siren (`880Hz ↔ 1320Hz`) on phones & laptops |
@@ -222,7 +222,7 @@ npm run start
 
 - [x] Multimodal leaf pathology scanner with disease & severity classification.
 - [x] Grounded Nigerian crop knowledge, Naira (₦) prices, and fertilizer schedules.
-- [x] Wireless ESP-32D IoT hardware integration + Physical Active Buzzer (`GPIO 25`).
+- [x] Wireless ESP-32D IoT hardware integration + Physical Passive Buzzer (`GPIO 25`, `1800Hz/1200Hz` PWM).
 - [x] Interactive Three.js 3D Farm Digital Twin + Supabase cloud persistence across judges' phones.
 - [x] Native Gemini AI Function Calling against live physical sensors & hazard logs.
 - [x] Global Web Audio Fire Siren with mobile haptic vibration & 1-tap arming.

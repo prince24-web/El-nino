@@ -21,14 +21,14 @@ In your **Vercel Project Settings $\rightarrow$ Environment Variables**, confirm
    #define WIFI_SSID_1     "Your_Hotspot_Name"
    #define WIFI_PASS_1     "Your_Hotspot_Password"
    #define TELEMETRY_URL   "https://nino-three.vercel.app/api/telemetry"
-   #define BUZZER_IS_PASSIVE false
+   #define BUZZER_IS_PASSIVE true
    ```
 3. Plug ESP32 into laptop USB and run:
    ```powershell
    python -m platformio run -d hardware --target upload
    ```
 4. **Unplug the laptop USB cable and plug the ESP32 into your 5V Power Bank!**
-   - Listen for the clean **220ms startup beep** from the Active Buzzer (`GPIO 25`).
+   - Listen for the clean **1800Hz / 1200Hz two-tone startup chirp** from the Passive Buzzer (`GPIO 25`).
    - Within ~5 seconds, `nino-three.vercel.app` turns green: **`ESP32 Live`**.
 
 ### C. Arm the Judges' Phones
@@ -44,7 +44,7 @@ In your **Vercel Project Settings $\rightarrow$ Environment Variables**, confirm
 | **0:00 – 0:30** | **1. Baseline & Wireless Proof** | Lift the ESP32 powered solely by the power bank. Show the **3D Farm Digital Twin** orbiting smoothly on screen & judges' phones showing `Soil ~0–40% • Safe`. |
 | **0:30 – 1:15** | **2. Live AI Sensor Tool Calling** | In the main Chat, tap **`📡 Check live farm sensor status`** (or type *"How is the soil moisture on my farm right now?"*). Gemini invokes `get_live_farm_sensors()`, shows the **`AI Read Live Tool`** badge, and quotes the exact live ESP32 percentages! |
 | **1:15 – 2:00** | **3. Pour Water (Rain + Flash Flood)** | Pour water from a bottle onto the **FC-37 Rain Grid (`GPIO 35`)** and into the soil/red strip (`GPIO 34`, `GPIO 32`).<br>• 3D sky darkens and **2,400 raindrops fall**.<br>• **Reflective blue floodwater plane rises** over the ridges.<br>• Click **`Ask AI for Rain & Flood Plan`** for instant furrow drainage advice. |
-| **2:00 – 2:35** | **4. Wildfire Alarm (Buzzer + All Phones)** | Flick a lighter ~15cm from the **IR Flame Sensor (`GPIO 33`)**.<br>• Physical **Active Buzzer (`GPIO 25`)** blares immediately (`<20ms`).<br>• **Every judge's phone** flashes red **`🔥 WILDFIRE EMERGENCY DETECTED`** and sounds the **Web Audio Fire Siren** + vibration!<br>• Tap **`Emergency Fire Protocol`** for instant firebreak guidance. |
+| **2:00 – 2:35** | **4. Wildfire Alarm (Buzzer + All Phones)** | Flick a lighter ~15cm from the **IR Flame Sensor (`GPIO 33`)**.<br>• Physical **Passive Buzzer (`GPIO 25`, 1800Hz/1200Hz PWM)** blares immediately (`<20ms`).<br>• **Every judge's phone** flashes red **`🔥 WILDFIRE EMERGENCY DETECTED`** and sounds the **Web Audio Fire Siren** + vibration!<br>• Tap **`Emergency Fire Protocol`** for instant firebreak guidance. |
 | **2:35 – 3:00** | **5. Leaf Disease Scan + Market Prices** | Upload a diseased tomato/maize leaf photo $\rightarrow$ Gemini diagnoses **Late Blight**, prescribes **Ridomil Gold** knapsack dosage in **Naira (₦)**, and answers Mile 12/Bodija market price questions. |
 
 ---

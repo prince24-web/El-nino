@@ -273,8 +273,8 @@ def create_project_overview():
         ],
         [
             Paragraph("<b>Physical & Web Fire Alarm</b>", body_style),
-            Paragraph("Active 2-Pin Buzzer (GPIO 25) + Web Audio Siren", body_style),
-            Paragraph("Physical 85dB buzzer pulses locally in <20ms (even offline); Supabase sync triggers two-tone 880Hz/1320Hz siren + vibration on all judges' phones.", body_style)
+            Paragraph("Passive 2-Pin Buzzer (GPIO 25 PWM) + Web Audio Siren", body_style),
+            Paragraph("Physical passive buzzer drives a 1800Hz/1200Hz two-tone PWM alarm locally in <20ms (even offline); Supabase sync triggers two-tone 880Hz/1320Hz siren + vibration on all judges' phones.", body_style)
         ]
     ]
 
@@ -295,7 +295,7 @@ def create_project_overview():
         "El-Nino pairs an interactive Three.js 3D Digital Twin with Supabase PostgreSQL cloud persistence (<i>farm_telemetry</i> &amp; <i>farm_alerts</i>) so every judge's phone on <b>nino-three.vercel.app</b> sees the exact same live physical farm state simultaneously:",
         body_style
     ))
-    story.append(Paragraph("• <b>3D Physical Hardware Twins:</b> The interactive 3D planter box models the actual ESP-32D, Active Buzzer halo, Soil Probe, Red Water Strip, Rain Plate, and Flame Beacon.", bullet_style))
+    story.append(Paragraph("• <b>3D Physical Hardware Twins:</b> The interactive 3D planter box models the actual ESP-32D, Passive Buzzer halo, Soil Probe, Red Water Strip, Rain Plate, and Flame Beacon.", bullet_style))
     story.append(Paragraph("• <b>Dynamic Rain &amp; Rising Floodwater:</b> 2,400 animated sky-blue raindrops fall during precipitation while a reflective floodwater plane visibly rises over the crop ridges as moisture/water depth increases.", bullet_style))
     story.append(Paragraph("• <b>Wildfire Siren Across All Phones:</b> When flame hits GPIO 33, the physical buzzer blares and every armed browser sounds a Web Audio two-tone siren (880Hz ↔ 1320Hz) with flashing red wildfire banners.", bullet_style))
 

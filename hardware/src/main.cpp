@@ -86,7 +86,7 @@ void initBuzzerDriver() {
 
 void buzzerOn() {
   if (BUZZER_IS_PASSIVE) {
-    ledcWriteTone(0, passiveHighTone ? 1800 : 1300);
+    ledcWriteTone(0, passiveHighTone ? 1800 : 1200);
     passiveHighTone = !passiveHighTone;
   } else {
     digitalWrite(PIN_BUZZER, HIGH);
@@ -104,9 +104,17 @@ void buzzerOff() {
 }
 
 void runBootBuzzerTest() {
-  buzzerOn();
-  delay(220);
-  buzzerOff();
+  if (BUZZER_IS_PASSIVE) {
+    ledcWriteTone(0, 1800);
+    delay(180);
+    ledcWriteTone(0, 1200);
+    delay(180);
+    ledcWriteTone(0, 0);
+  } else {
+    buzzerOn();
+    delay(220);
+    buzzerOff();
+  }
   Serial.println("[BUZZER] Boot self-test executed on GPIO 25");
 }
 
@@ -134,10 +142,18 @@ void runTestPassiveBeep() {
 }
 
 void runManualTestBeep() {
-  buzzerOn();
-  delay(350);
-  buzzerOff();
-  Serial.println("[BUZZER] Manual 350ms test beep triggered on GPIO 25");
+  if (BUZZER_IS_PASSIVE) {
+    ledcWriteTone(0, 1800);
+    delay(200);
+    ledcWriteTone(0, 1200);
+    delay(200);
+    ledcWriteTone(0, 0);
+  } else {
+    buzzerOn();
+    delay(350);
+    buzzerOff();
+  }
+  Serial.println("[BUZZER] Manual Beep #2 (1800Hz/1200Hz) test triggered on GPIO 25");
 }
 
 void readAllSensors() {

@@ -9,7 +9,7 @@
 ## 1. Architectural Philosophy
 
 **El Niño** is designed as a **closed-loop Cyber-Physical System (CPS)** unifying three layers:
-1. **Autonomous Edge IoT Node (ESP-32D + 5 Farm Sensors + Physical Active Buzzer)** — Runs wirelessly off a 5V USB power bank, reacts locally to wildfires in `<20ms`, and pushes live readings to the cloud over Wi-Fi HTTPS.
+1. **Autonomous Edge IoT Node (ESP-32D + 5 Farm Sensors + Physical Passive Buzzer)** — Runs wirelessly off a 5V USB power bank, reacts locally to wildfires in `<20ms` (`1800Hz/1200Hz` PWM siren), and pushes live readings to the cloud over Wi-Fi HTTPS.
 2. **Serverless Cloud & Persistence Layer (Next.js 16 on Vercel + Supabase PostgreSQL)** — Solves serverless instance isolation by persisting real-time telemetry and hazard logs in PostgreSQL (`farm_telemetry`, `farm_alerts`), enabling simultaneous multi-client sync across laptops and judges' mobile phones.
 3. **Multimodal AI & 3D Digital Twin Layer (Google Gemini 3.1 Flash + Three.js WebGL)** — Gives farmers both a real-time 3D visualization of their plot and an AI agronomy assistant capable of **native tool calling** against live physical sensors.
 
@@ -25,7 +25,7 @@ flowchart TB
     RAIN["🌧️ FC-37 Raindrop Grid\n(GPIO 35)"] --> ESP
     WATER["🌊 Red Water Depth Strip\n(GPIO 32)"] --> ESP
     FLAME["🔥 IR Flame Detector\n(GPIO 33 - Active LOW)"] --> ESP
-    ESP -- "<20ms Local Interrupt Loop\n(GPIO 25)" --> BUZZ["🔊 Active Buzzer Siren\n(85dB Physical Alarm)"]
+    ESP -- "<20ms Local Interrupt Loop\n(GPIO 25 LEDC PWM)" --> BUZZ["🔊 Passive Buzzer Siren\n(1800Hz / 1200Hz Physical Alarm)"]
   end
 
   subgraph Cloud["2. Vercel Serverless + Supabase PostgreSQL"]

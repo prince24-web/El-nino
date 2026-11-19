@@ -16,7 +16,7 @@
  *   2. Raindrop Plate      -> Blue LM393 Board -> VCC:3V3, GND:GND, AO:GPIO 35
  *   3. Red Water Strip     -> +:3V3, -:GND, S:GPIO 32
  *   4. IR Flame Sensor     -> VCC:3V3, GND:GND, OUT:GPIO 33
- *   5. 2-Pin Active Buzzer -> Long Leg(+):GPIO 25, Short Leg(-):GND
+ *   5. 2-Pin Passive Buzzer -> Long Leg(+):GPIO 25, Short Leg(-):GND
  * ============================================================================
  */
 
@@ -35,7 +35,7 @@
   #define WIFI_SSID_2     ""
   #define WIFI_PASS_2     ""
   #define TELEMETRY_URL   "https://nino-three.vercel.app/api/telemetry"
-  #define BUZZER_IS_PASSIVE false
+  #define BUZZER_IS_PASSIVE true
 #endif
 
 // Pin Assignments
@@ -100,7 +100,7 @@ void initBuzzerDriver() {
 
 void buzzerOn() {
   if (BUZZER_IS_PASSIVE) {
-    ledcWriteTone(0, passiveHighTone ? 1800 : 1300);
+    ledcWriteTone(0, passiveHighTone ? 1800 : 1200);
     passiveHighTone = !passiveHighTone;
   } else {
     digitalWrite(PIN_BUZZER, HIGH);
@@ -118,9 +118,17 @@ void buzzerOff() {
 }
 
 void runBootBuzzerTest() {
-  buzzerOn();
-  delay(220);
-  buzzerOff();
+  if (BUZZER_IS_PASSIVE) {
+    ledcWriteTone(0, 1800);
+    delay(180);
+    ledcWriteTone(0, 1200);
+    delay(180);
+    ledcWriteTone(0, 0);
+  } else {
+    buzzerOn();
+    delay(220);
+    buzzerOff();
+  }
   Serial.println("[BUZZER] Boot self-test executed on GPIO 25");
 }
 
@@ -148,10 +156,18 @@ void runTestPassiveBeep() {
 }
 
 void runManualTestBeep() {
-  buzzerOn();
-  delay(350);
-  buzzerOff();
-  Serial.println("[BUZZER] Manual 350ms test beep triggered on GPIO 25");
+  if (BUZZER_IS_PASSIVE) {
+    ledcWriteTone(0, 1800);
+    delay(200);
+    ledcWriteTone(0, 1200);
+    delay(200);
+    ledcWriteTone(0, 0);
+  } else {
+    buzzerOn();
+    delay(350);
+    buzzerOff();
+  }
+  Serial.println("[BUZZER] Manual Beep #2 (1800Hz/1200Hz) test triggered on GPIO 25");
 }
 
 void readAllSensors() {

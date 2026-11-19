@@ -92,7 +92,7 @@ Edit `hardware/include/secrets.h` (gitignored so credentials never leak) before 
 #define WIFI_PASS_1     "Your_Hotspot_Password"
 #define WIFI_SSID_2     ""
 #define WIFI_PASS_2     ""
-#define TELEMETRY_URL   "https://nino-three.vercel.app/api/telemetry"
+#define TELEMETRY_URL   "https://elnino-three.vercel.app/api/telemetry"
 #define BUZZER_IS_PASSIVE true    // Passive Buzzer (Beep #2: 1800Hz/1200Hz PWM)
 ```
 

@@ -10,7 +10,7 @@
 
 // Live El Niño Telemetry Endpoint (Vercel production HTTPS URL)
 // For local LAN testing, change to: "http://<YOUR_LAPTOP_IP>:3000/api/telemetry"
-#define TELEMETRY_URL   "https://nino-three.vercel.app/api/telemetry"
+#define TELEMETRY_URL   "https://elnino-three.vercel.app/api/telemetry"
 
 // Buzzer type on GPIO 25:
 // false = 2-pin Active Buzzer (solid black bottom, beeps with 3.3V HIGH)

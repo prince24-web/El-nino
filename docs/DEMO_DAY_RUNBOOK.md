@@ -1,12 +1,12 @@
 # 🎬 El Niño — Hackathon Demo Day Runbook (Team 8)
 
-Follow this quick checklist to deliver a **flawless, zero-lag live cyber-physical demonstration** on your laptop AND the judges' phones via `https://nino-three.vercel.app`.
+Follow this quick checklist to deliver a **flawless, zero-lag live cyber-physical demonstration** on your laptop AND the judges' phones via `https://elnino-three.vercel.app`.
 
 ---
 
 ## 1. Pre-Demo Cloud & Hardware Setup (10 Minutes Before Pitch)
 
-### A. Verify Vercel Environment Variables (`nino-three.vercel.app`)
+### A. Verify Vercel Environment Variables (`elnino-three.vercel.app`)
 In your **Vercel Project Settings $\rightarrow$ Environment Variables**, confirm all 3 keys are set:
 1. `GEMINI_API_KEY` — Google Gemini API Key
 2. `SUPABASE_URL` — `https://sdqsnkoohiqpcboxtbsp.supabase.co`
@@ -20,7 +20,7 @@ In your **Vercel Project Settings $\rightarrow$ Environment Variables**, confirm
    ```cpp
    #define WIFI_SSID_1     "Your_Hotspot_Name"
    #define WIFI_PASS_1     "Your_Hotspot_Password"
-   #define TELEMETRY_URL   "https://nino-three.vercel.app/api/telemetry"
+   #define TELEMETRY_URL   "https://elnino-three.vercel.app/api/telemetry"
    #define BUZZER_IS_PASSIVE true
    ```
 3. Plug ESP32 into laptop USB and run:
@@ -29,10 +29,10 @@ In your **Vercel Project Settings $\rightarrow$ Environment Variables**, confirm
    ```
 4. **Unplug the laptop USB cable and plug the ESP32 into your 5V Power Bank!**
    - Listen for the clean **1800Hz / 1200Hz two-tone startup chirp** from the Passive Buzzer (`GPIO 25`).
-   - Within ~5 seconds, `nino-three.vercel.app` turns green: **`ESP32 Live`**.
+   - Within ~5 seconds, `elnino-three.vercel.app` turns green: **`ESP32 Live`**.
 
 ### C. Arm the Judges' Phones
-1. Share `https://nino-three.vercel.app` with the judges (QR code or short link).
+1. Share `https://elnino-three.vercel.app` with the judges (QR code or short link).
 2. Ask them to tap the pulsing amber **`Tap to Arm Phone Fire Siren`** button in the top bar once (mobile browsers require one user tap to unlock speaker audio — they will hear a tiny confirmation chirp and the badge turns **`🔔 Phone Alarm Armed`**).
 
 ---

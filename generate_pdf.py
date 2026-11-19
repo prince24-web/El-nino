@@ -159,7 +159,7 @@ def create_project_overview():
         ],
         [
             Paragraph("<b>Target Region:</b> Nigeria & Sub-Saharan Africa", body_style),
-            Paragraph("<b>Deployment:</b> nino-three.vercel.app + Supabase + Wireless ESP-32D", body_style)
+            Paragraph("<b>Deployment:</b> elnino-three.vercel.app + Supabase + Wireless ESP-32D", body_style)
         ]
     ]
     meta_table = Table(meta_data, colWidths=[250, 254])
@@ -179,7 +179,7 @@ def create_project_overview():
         body_style
     ))
     story.append(Paragraph(
-        "<b>El-Nino</b> is a wireless cyber-physical platform engineered to eliminate these bottlenecks. Combining a power-bank-powered <b>ESP-32D IoT node</b> (soil moisture, rain intensity, flood depth, IR flame detection, and a local 85dB active fire buzzer), <b>Supabase cloud telemetry sync</b> (broadcasting live alarms to all phones at <b>nino-three.vercel.app</b>), a <b>real-time Three.js 3D Digital Twin</b>, and <b>Google Gemini 3.1 Flash AI with native sensor tool calling</b>, El-Nino delivers instant hazard protection and grounded Naira (₦) agronomic guidance.",
+        "<b>El-Nino</b> is a wireless cyber-physical platform engineered to eliminate these bottlenecks. Combining a power-bank-powered <b>ESP-32D IoT node</b> (soil moisture, rain intensity, flood depth, IR flame detection, and a local passive PWM fire buzzer), <b>Supabase cloud telemetry sync</b> (broadcasting live alarms to all phones at <b>elnino-three.vercel.app</b>), a <b>real-time Three.js 3D Digital Twin</b>, and <b>Google Gemini 3.1 Flash AI with native sensor tool calling</b>, El-Nino delivers instant hazard protection and grounded Naira (₦) agronomic guidance.",
         body_style
     ))
 
@@ -292,7 +292,7 @@ def create_project_overview():
     # 4. 3D Digital Twin Simulation Engine
     story.append(Paragraph("4. The 3D Farmland Digital Twin & Multi-Phone Sync", h1_style))
     story.append(Paragraph(
-        "El-Nino pairs an interactive Three.js 3D Digital Twin with Supabase PostgreSQL cloud persistence (<i>farm_telemetry</i> &amp; <i>farm_alerts</i>) so every judge's phone on <b>nino-three.vercel.app</b> sees the exact same live physical farm state simultaneously:",
+        "El-Nino pairs an interactive Three.js 3D Digital Twin with Supabase PostgreSQL cloud persistence (<i>farm_telemetry</i> &amp; <i>farm_alerts</i>) so every judge's phone on <b>elnino-three.vercel.app</b> sees the exact same live physical farm state simultaneously:",
         body_style
     ))
     story.append(Paragraph("• <b>3D Physical Hardware Twins:</b> The interactive 3D planter box models the actual ESP-32D, Passive Buzzer halo, Soil Probe, Red Water Strip, Rain Plate, and Flame Beacon.", bullet_style))
@@ -323,8 +323,8 @@ def create_project_overview():
         [Paragraph("<b>Demo Step</b>", body_style), Paragraph("<b>Physical Action (Stage)</b>", body_style), Paragraph("<b>App, Judges' Phones &amp; 3D Response</b>", body_style)],
         [
             Paragraph("<b>Step 1: Wireless Power-Bank Boot</b>", body_style),
-            Paragraph("Plug ESP-32D into 5V Power Bank (no laptop cord!). Judges open nino-three.vercel.app &amp; tap 'Arm Phone Fire Siren'.", body_style),
-            Paragraph("Active buzzer gives confirmation chirp. 3D Digital Twin turns green: 'ESP32 Live' on laptop and all judges' phones simultaneously.", body_style)
+            Paragraph("Plug ESP-32D into 5V Power Bank (no laptop cord!). Judges open elnino-three.vercel.app &amp; tap 'Arm Phone Fire Siren'.", body_style),
+            Paragraph("Passive buzzer gives two-tone chirp. 3D Digital Twin turns green: 'ESP32 Live' on laptop and all judges' phones simultaneously.", body_style)
         ],
         [
             Paragraph("<b>Step 2: AI Live Sensor Tool Call</b>", body_style),

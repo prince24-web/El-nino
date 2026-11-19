@@ -1,7 +1,7 @@
 # 🏗️ El Niño — Cyber-Physical System Architecture
 
 **Team:** El Nino Team 8 (Buildathon Group 8)  
-**Live Deployment:** `https://nino-three.vercel.app`  
+**Live Deployment:** `https://elnino-three.vercel.app`  
 **Repository:** `https://github.com/prince24-web/el-nino`
 
 ---

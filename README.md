@@ -165,7 +165,7 @@ Chunks are passed into a `ReadableStream` via `TextEncoder`, streaming markdown 
 | **Persistence** | Supabase PostgreSQL (RLS) | Multi-device real-time sync (`farm_telemetry`) & hazard audit log (`farm_alerts`) |
 | **AI Foundation** | Google Gemini 3.1 Flash (`@google/genai`) | Multimodal pathology vision + native function calling on live farm sensors |
 | **Web Alarm** | Web Audio API + Haptic API | Zero-asset two-tone fire siren (`880Hz ↔ 1320Hz`) on phones & laptops |
-| **Deployment** | Vercel (`nino-three.vercel.app`) | Global edge CDN & serverless hosting |
+| **Deployment** | Vercel (`elnino-three.vercel.app`) | Global edge CDN & serverless hosting |
 
 ---
 

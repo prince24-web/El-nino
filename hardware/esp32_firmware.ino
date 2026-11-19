@@ -34,7 +34,7 @@
   #define WIFI_PASS_1     "YOUR_HOTSPOT_PASSWORD"
   #define WIFI_SSID_2     ""
   #define WIFI_PASS_2     ""
-  #define TELEMETRY_URL   "https://nino-three.vercel.app/api/telemetry"
+  #define TELEMETRY_URL   "https://elnino-three.vercel.app/api/telemetry"
   #define BUZZER_IS_PASSIVE true
 #endif
 

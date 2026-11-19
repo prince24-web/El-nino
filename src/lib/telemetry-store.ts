@@ -60,10 +60,10 @@ let memoryAlerts: FarmAlertRecord[] = [];
 const lastAlertAt: Partial<Record<AlertType, number>> = {};
 
 function getSupabaseConfig() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
+  const url = process.env.SUPABASE_URL?.trim();
   const key =
     process.env.SUPABASE_SERVICE_ROLE_KEY?.trim() ||
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim();
+    process.env.SUPABASE_ANON_KEY?.trim();
 
   if (!url || !key) return null;
   return { url: url.replace(/\/$/, ""), key };

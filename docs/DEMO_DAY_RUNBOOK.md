@@ -9,8 +9,8 @@ Follow this quick checklist to deliver a **flawless, zero-lag live cyber-physica
 ### A. Verify Vercel Environment Variables (`nino-three.vercel.app`)
 In your **Vercel Project Settings $\rightarrow$ Environment Variables**, confirm all 3 keys are set:
 1. `GEMINI_API_KEY` — Google Gemini API Key
-2. `NEXT_PUBLIC_SUPABASE_URL` — `https://sdqsnkoohiqpcboxtbsp.supabase.co`
-3. `NEXT_PUBLIC_SUPABASE_ANON_KEY` — Your Supabase publishable key
+2. `SUPABASE_URL` — `https://sdqsnkoohiqpcboxtbsp.supabase.co`
+3. `SUPABASE_ANON_KEY` — Your Supabase publishable key
 
 *(After pushing updates to `main`, trigger or wait ~45s for Vercel to finish deploying.)*
 
